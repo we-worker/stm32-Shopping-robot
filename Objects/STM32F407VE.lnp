@@ -1,0 +1,28 @@
+--cpu=Cortex-M4.fp
+".\objects\main.o"
+".\objects\stm32f4xx_it.o"
+".\objects\system_stm32f4xx.o"
+".\objects\delay.o"
+".\objects\keyled.o"
+".\objects\btmodule.o"
+".\objects\stdout_user.o"
+".\objects\motordriver.o"
+".\objects\motorcontroller.o"
+".\objects\amt1450_uart.o"
+".\objects\tcrt5000.o"
+".\objects\pid.o"
+".\objects\startup_stm32f40_41xxx.o"
+".\objects\stm32f4xx_adc.o"
+".\objects\stm32f4xx_rcc.o"
+".\objects\stm32f4xx_gpio.o"
+".\objects\stm32f4xx_usart.o"
+".\objects\misc.o"
+".\objects\stm32f4xx_i2c.o"
+".\objects\stm32f4xx_dma.o"
+".\objects\stm32f4xx_tim.o"
+".\objects\stm32f4xx_dcmi.o"
+".\objects\retarget_io.o"
+--strict --scatter ".\Objects\STM32F407VE.sct"
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\STM32F407VE.map" -o .\Objects\STM32F407VE.axf
