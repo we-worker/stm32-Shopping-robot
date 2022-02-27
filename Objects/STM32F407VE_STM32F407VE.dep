@@ -1,5 +1,5 @@
 Dependencies for Project 'STM32F407VE', Target 'STM32F407VE': (DO NOT MODIFY !)
-F (.\User\main.c)(0x620F706E)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+F (.\User\main.c)(0x621A2DDD)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
 I (.\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x5BCDE8EE)
 I (.\Libraries\CMSIS\Include\core_cm4.h)(0x5B911BB2)
 I (C:\works\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)
@@ -36,11 +36,17 @@ I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dcmi.h)(0x5B911BB3)
 I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_fsmc.h)(0x5B911BB3)
 I (User\delay.h)(0x5B911BB3)
 I (User\KeyLed.h)(0x5B911BB3)
-I (User\MotorDriver.h)(0x5BEE55FC)
+I (User\MotorDriver.h)(0x6218CCB4)
 I (User\MotorController.h)(0x5BEE600B)
 I (User\amt1450_uart.h)(0x5DB6B0F5)
 I (User\tcrt5000.h)(0x61A224A4)
-I (User\PID.h)(0x620F5AD5)
+I (User\PID.h)(0x621B1FBB)
+I (User\BTModule.h)(0x5B911BB3)
+I (C:\works\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
+I (C:\works\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x57F606B8)
+I (User\AStarRoute.h)(0x621B1FD3)
+I (C:\works\Keil_v5\ARM\ARMCC\include\math.h)(0x57F606B6)
+I (C:\works\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x57F606B8)
 F (.\User\stm32f4xx_it.c)(0x5B911BB3)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\stm32f4xx_it.o --omf_browse .\objects\stm32f4xx_it.crf --depend .\objects\stm32f4xx_it.d)
 I (User\stm32f4xx_it.h)(0x5B911BB3)
 I (.\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x5BCDE8EE)
@@ -227,7 +233,7 @@ I (C:\works\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x57F606B8)
 I (User\MotorController.h)(0x5BEE600B)
 F (.\User\stdout_user.c)(0x5B911BB3)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\stdout_user.o --omf_browse .\objects\stdout_user.crf --depend .\objects\stdout_user.d)
 F (.\User\MotorDriver.c)(0x5BEE5F46)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\motordriver.o --omf_browse .\objects\motordriver.crf --depend .\objects\motordriver.d)
-I (User\MotorDriver.h)(0x5BEE55FC)
+I (User\MotorDriver.h)(0x6218CCB4)
 I (.\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x5BCDE8EE)
 I (.\Libraries\CMSIS\Include\core_cm4.h)(0x5B911BB2)
 I (C:\works\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)
@@ -263,7 +269,7 @@ I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dac.h)(0x5B911BB3)
 I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dcmi.h)(0x5B911BB3)
 I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_fsmc.h)(0x5B911BB3)
 I (User\delay.h)(0x5B911BB3)
-F (.\User\MotorController.c)(0x5BEEA10A)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\motorcontroller.o --omf_browse .\objects\motorcontroller.crf --depend .\objects\motorcontroller.d)
+F (.\User\MotorController.c)(0x6218DCD4)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\motorcontroller.o --omf_browse .\objects\motorcontroller.crf --depend .\objects\motorcontroller.d)
 I (User\MotorController.h)(0x5BEE600B)
 I (.\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x5BCDE8EE)
 I (.\Libraries\CMSIS\Include\core_cm4.h)(0x5B911BB2)
@@ -299,7 +305,7 @@ I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_can.h)(0x5B911BB3)
 I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dac.h)(0x5B911BB3)
 I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dcmi.h)(0x5B911BB3)
 I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_fsmc.h)(0x5B911BB3)
-I (User\MotorDriver.h)(0x5BEE55FC)
+I (User\MotorDriver.h)(0x6218CCB4)
 F (.\User\amt1450_uart.c)(0x5DB6C83E)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\amt1450_uart.o --omf_browse .\objects\amt1450_uart.crf --depend .\objects\amt1450_uart.d)
 I (User\amt1450_uart.h)(0x5DB6B0F5)
 I (.\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x5BCDE8EE)
@@ -377,8 +383,8 @@ I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dac.h)(0x5B911BB3)
 I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dcmi.h)(0x5B911BB3)
 I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_fsmc.h)(0x5B911BB3)
 F (.\User\tcrt5000.h)(0x61A224A4)()
-F (.\User\PID.c)(0x620F70FE)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\pid.o --omf_browse .\objects\pid.crf --depend .\objects\pid.d)
-I (User\PID.h)(0x620F5AD5)
+F (.\User\PID.c)(0x621B1FF9)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\pid.o --omf_browse .\objects\pid.crf --depend .\objects\pid.d)
+I (User\PID.h)(0x621B1FBB)
 I (.\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x5BCDE8EE)
 I (.\Libraries\CMSIS\Include\core_cm4.h)(0x5B911BB2)
 I (C:\works\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)
@@ -416,7 +422,18 @@ I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_fsmc.h)(0x5B911BB3)
 I (User\delay.h)(0x5B911BB3)
 I (User\MotorController.h)(0x5BEE600B)
 I (User\amt1450_uart.h)(0x5DB6B0F5)
-F (.\User\PID.h)(0x620F5AD5)()
+I (User\MotorDriver.h)(0x6218CCB4)
+I (User\AStarRoute.h)(0x621B1FD3)
+I (C:\works\Keil_v5\ARM\ARMCC\include\math.h)(0x57F606B6)
+I (C:\works\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
+I (C:\works\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x57F606B8)
+F (.\User\PID.h)(0x621B1FBB)()
+F (.\User\AStarRoute.h)(0x621B1FD3)()
+F (.\User\AStarRoute.c)(0x621A1A4D)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\astarroute.o --omf_browse .\objects\astarroute.crf --depend .\objects\astarroute.d)
+I (User\AStarRoute.h)(0x621B1FD3)
+I (C:\works\Keil_v5\ARM\ARMCC\include\math.h)(0x57F606B6)
+I (C:\works\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
+I (C:\works\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x57F606B8)
 F (.\Libraries\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f40_41xxx.s)(0x5B911BAD)(--cpu Cortex-M4.fp -g --apcs=interwork -I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include--pd "__UVISION_VERSION SETA 523" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1"--list .\listings\startup_stm32f40_41xxx.lst --xref -o .\objects\startup_stm32f40_41xxx.o --depend .\objects\startup_stm32f40_41xxx.d)
 F (.\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.c)(0x5B911BB3)(--c99 -c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I .\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I .\Libraries\STM32F4xx_StdPeriph_Driver\inc -I .\Libraries\CMSIS\Include -I .\User -I .\eMPL-I.\RTE\_STM32F407VE-IC:\works\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\works\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx -DEMPL_TARGET_STM32 -DMPU6050-o .\objects\stm32f4xx_adc.o --omf_browse .\objects\stm32f4xx_adc.crf --depend .\objects\stm32f4xx_adc.d)
 I (.\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_adc.h)(0x5B911BB3)

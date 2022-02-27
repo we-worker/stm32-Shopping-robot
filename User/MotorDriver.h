@@ -2,6 +2,9 @@
 #define __MOTORDRIVER_H
 #include "stm32f4xx.h"
 
+extern float Motor_speed1;//实时转速
+extern float Motor_speed2;//实时转速
+
 /*电机PWM驱动部分
 使用TIM1四路PWM通道控制四个电机，PA11，PA10，PA9，PA8
 电机A：IN1-PD14，IN2-PA11（TIM1-4），EF-PD15

@@ -21,29 +21,49 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V2.0.18.0
 Dialog DLL:      TCM.DLL V1.27.0.0
  
 <h2>Project:</h2>
-C:\Users\Arc\Documents\codeProjects\keil\STM32F407VE\STM32F407VE.uvprojx
-Project File Date:  02/18/2022
+C:\Users\Arc\Documents\codeProjects\keil\STM32F407VEÑ­¼£±ÈÈü\STM32F407VE.uvprojx
+Project File Date:  02/26/2022
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 4 (build 422)', folder: 'C:\works\Keil_v5\ARM\ARMCC\Bin'
-Build target 'STM32F407VE'
+Rebuild target 'STM32F407VE'
+compiling delay.c...
+compiling KeyLed.c...
+compiling system_stm32f4xx.c...
+compiling stm32f4xx_it.c...
+compiling main.c...
+compiling stdout_user.c...
+compiling tcrt5000.c...
+compiling MotorDriver.c...
+compiling BTModule.c...
+compiling amt1450_uart.c...
+compiling MotorController.c...
+assembling startup_stm32f40_41xxx.s...
+compiling AStarRoute.c...
 compiling PID.c...
-User\PID.c(51): warning:  #223-D: function "abs" declared implicitly
-  		now_angle=now_angle+(abs(d_speed)*2*0.0001)/(2*3.14159*car_D)*360;
-User\PID.c: 1 warning, 0 errors
+compiling stm32f4xx_adc.c...
+compiling stm32f4xx_gpio.c...
+compiling stm32f4xx_rcc.c...
+compiling stm32f4xx_usart.c...
+compiling stm32f4xx_i2c.c...
+compiling misc.c...
+compiling stm32f4xx_dma.c...
+compiling stm32f4xx_dcmi.c...
+compiling retarget_io.c...
+compiling stm32f4xx_tim.c...
 linking...
-Program Size: Code=13460 RO-data=544 RW-data=184 ZI-data=1664  
-".\Objects\STM32F407VE.axf" - 0 Error(s), 1 Warning(s).
+Program Size: Code=19032 RO-data=880 RW-data=236 ZI-data=6916  
+".\Objects\STM32F407VE.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
 Package Vendor: Keil
                 http://www.keil.com/pack/Keil.ARM_Compiler.1.3.0.pack
-                Keil.ARM Compiler::Compiler:I/O:STDIN:ITM:1.2.0
+                Keil.ARM Compiler::Compiler:I/O:STDOUT:User:1.2.0
                 Keil ARM Compiler extensions for ARM Compiler 5 and ARM Compiler 6
-   * Component: STDIN Variant: ITM Version: 1.2.0
    * Component: STDOUT Variant: User Version: 1.2.0
    * Component: STDERR Variant: Breakpoint Version: 1.2.0
+   * Component: STDIN Variant: ITM Version: 1.2.0
 
 <h2>Collection of Component include folders:</h2>
   .\RTE\_STM32F407VE
@@ -51,18 +71,18 @@ Package Vendor: Keil
 
 <h2>Collection of Component Files used:</h2>
 
-   * Component: Keil.ARM Compiler::Compiler:I/O:STDIN:ITM:1.2.0
-      Source file:   Source\retarget_io.c
-
    * Component: Keil.ARM Compiler::Compiler:I/O:STDOUT:User:1.2.0
-      Source file:   Template\stdout_user.c
       Source file:   Source\retarget_io.c
       Source file:   Template\stdout_USART.c
       Source file:   Template\stdout_display.c
+      Source file:   Template\stdout_user.c
 
    * Component: Keil.ARM Compiler::Compiler:I/O:STDERR:Breakpoint:1.2.0
       Source file:   Source\retarget_io.c
-Build Time Elapsed:  00:00:00
+
+   * Component: Keil.ARM Compiler::Compiler:I/O:STDIN:ITM:1.2.0
+      Source file:   Source\retarget_io.c
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

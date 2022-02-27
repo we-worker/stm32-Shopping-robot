@@ -41,3 +41,9 @@
 .\objects\main.o: User\amt1450_uart.h
 .\objects\main.o: User\tcrt5000.h
 .\objects\main.o: User\PID.h
+.\objects\main.o: User\BTModule.h
+.\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\main.o: User\AStarRoute.h
+.\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h

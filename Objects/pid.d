@@ -38,3 +38,8 @@
 .\objects\pid.o: User\delay.h
 .\objects\pid.o: User\MotorController.h
 .\objects\pid.o: User\amt1450_uart.h
+.\objects\pid.o: User\MotorDriver.h
+.\objects\pid.o: User\AStarRoute.h
+.\objects\pid.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\objects\pid.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\pid.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h

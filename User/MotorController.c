@@ -1,7 +1,7 @@
 #include "MotorController.h"
 #include "MotorDriver.h"
 __IO uint16_t MotorController_EncoderResolution= 390;
-__IO uint8_t MotorController_WheelDiameter = 64;
+__IO uint8_t MotorController_WheelDiameter = 64;//原始64，32为偏差
 __IO uint16_t MotorController_Acc=0;
 __IO int16_t MotorController_MotorA_SpeedSet,MotorController_MotorB_SpeedSet,MotorController_MotorC_SpeedSet,MotorController_MotorD_SpeedSet;
 __IO int16_t MotorController_MotorA_SpeedCur,MotorController_MotorB_SpeedCur,MotorController_MotorC_SpeedCur,MotorController_MotorD_SpeedCur;
@@ -11,6 +11,10 @@ __IO float MotorController_MotorA_SpeedErr1,MotorController_MotorB_SpeedErr1,Mot
 __IO float MotorController_MotorA_SpeedErr2,MotorController_MotorB_SpeedErr2,MotorController_MotorC_SpeedErr2,MotorController_MotorD_SpeedErr2;
 __IO uint8_t MotorController_MotorEnabledCount;  //需要调节的电机数量
 __IO float MotorController_KP, MotorController_KI, MotorController_KD;  //PID参数
+
+
+float  Motor_speed1=0;
+float  Motor_speed2=0;
 
 //MotorController_Init() 初始化函数
 //nEncoderResolution编码器分辨率，轮子一圈的脉冲数；nWheelDiameter轮子的直径，单位：mm
@@ -253,7 +257,7 @@ void MotorController_SpeedTunner(void)
 			nCnt = Encoder_GetEncCount(2);
 
 			fSpeedCur = 3.14*(nCnt - MotorController_MotorB_EncCnt)* MotorController_WheelDiameter * 1000 / (MotorController_EncoderResolution*4*MOTOR_CONTROLLER_PERIOD);
-			
+			Motor_speed2=fSpeedCur;
 			fError = nSpeedExpect - fSpeedCur;
 
 			pwmDelta = MotorController_KP * (fError - MotorController_MotorB_SpeedErr1) 
@@ -288,6 +292,7 @@ void MotorController_SpeedTunner(void)
 			
 			nCnt = Encoder_GetEncCount(1);
 			fSpeedCur = 3.14*(nCnt - MotorController_MotorA_EncCnt)* MotorController_WheelDiameter * 1000 / (MotorController_EncoderResolution*4*MOTOR_CONTROLLER_PERIOD);
+			Motor_speed1=fSpeedCur;
 			fError = nSpeedExpect - fSpeedCur;
 			
 			pwmDelta = MotorController_KP * (fError - MotorController_MotorA_SpeedErr1) 

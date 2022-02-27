@@ -449,6 +449,16 @@
               <FileType>5</FileType>
               <FilePath>.\User\PID.h</FilePath>
             </File>
+            <File>
+              <FileName>AStarRoute.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\AStarRoute.h</FilePath>
+            </File>
+            <File>
+              <FileName>AStarRoute.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\AStarRoute.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
