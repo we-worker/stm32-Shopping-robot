@@ -44,6 +44,4 @@
 .\objects\main.o: User\BTModule.h
 .\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
-.\objects\main.o: User\AStarRoute.h
-.\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
-.\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\main.o: User\DFS_Map.h
