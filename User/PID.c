@@ -9,7 +9,7 @@
 //小车默认方向和位置。
 int car_direction = 3;
 int car_position[2] = {9, 8};
-#define car_D 230 //小车直径定义
+#define car_D 320 //小车直径定义
 
 //循迹pid的参数初始化
 void s_PIDInit(PID *s_PID)
@@ -18,7 +18,7 @@ void s_PIDInit(PID *s_PID)
 	s_PID->lastError = 0;
 	s_PID->prevError = 0;
 
-	s_PID->kp = 3.8;
+	s_PID->kp = 6;//old:3.8 0 1.4
 	s_PID->ki = 0;
 	s_PID->kd = 1.4;
 	s_PID->target = 76;
@@ -66,10 +66,10 @@ int32_t Straight_PID(int nowPos, int targetPos)
 
 	float dspeed = fabs(Motor_speed1 - Motor_speed2) / 2; //获得双轮转速的实际值的平均值
 
-	int kp = 600;
+	int kp = 700;
 	int out = (targetPos - nowPos) * kp;
-	if (out > 800)
-		out = 800;
+	if (out >= 900)
+		out = 900;
 	return (out + dspeed) / 2; //目标速度与自身速度加和平均是为了速度过度更平滑
 }
 
@@ -134,9 +134,9 @@ void TurnBY_PID(int turn_angle)
 		int out = (Turn_PID(&t_PID, now_angle, turn_angle) + dspeed / 2) / 2; //更加平滑使用转向pid得到数值
 		//根据是否为左转变化一下，同时需要固定30速度，不然后面转的太慢了
 		if (flag_left == 0)
-			out = -out - 30;
+			out = -out - 70;
 		else
-			out = out + 30;
+			out = out + 70;
 		//电机附速度值
 		MotorController_SetSpeed(1, out);
 		MotorController_SetSpeed(2, out);
@@ -278,8 +278,8 @@ void Straight_go(int nSpeed) //直走一格后退出
 void Straight_go_mm(int nSpeed, int distance) //直走多少毫米，输入速度和目标距离，自动完成走多少毫米。
 {
 
-	MotorController_SetSpeed(1, -nSpeed);
-	MotorController_SetSpeed(2, nSpeed);
+	MotorController_SetSpeed(1, nSpeed);
+	MotorController_SetSpeed(2, -nSpeed);
 	extern float Motor_speed1;
 	extern float Motor_speed2;
 
@@ -293,7 +293,8 @@ void Straight_go_mm(int nSpeed, int distance) //直走多少毫米，输入速度和目标距离
 	{
 		Delay_10us(10);
 		dis = dis + (fabs(Motor_speed1 - Motor_speed2) / 2.0f) * 0.0001f; //对线速度积分，就是路程长度。
-
+		
+		
 		uint8_t begin, jump, count[6]; // 最大6个跳变，即3条线
 		uint8_t position;
 		get_AMT1450Data_UART(&begin, &jump, count); //讲数据存储在三个变量中
@@ -311,8 +312,9 @@ void Straight_go_mm(int nSpeed, int distance) //直走多少毫米，输入速度和目标距离
 		}
 
 		int32_t spid_out = Follow_PID(&s_PID, position);
-		MotorController_SetSpeed(1, -nSpeed + spid_out);
-		MotorController_SetSpeed(2, nSpeed + spid_out);
+		MotorController_SetSpeed(1, nSpeed + spid_out);
+		MotorController_SetSpeed(2, -nSpeed + spid_out);
+		
 	}
 }
 

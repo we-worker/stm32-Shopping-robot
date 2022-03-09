@@ -27,7 +27,7 @@ int map_index = 0;
 int map_count = 0;
 extern int car_direction;
 //地图，前一个为行为，1，2，3，4分别为左转，右转，向后转，向左大转。后一个为第几个路口。
-int map[][2] = {{1, 8}, {1, 13}, {2, 19}, {2, 20}, {2, 26}, {1, 28}, {3, 29}, {1, 30}, {1, 31}, {2, 33}, {2, 36}, {1, 42}, {1, 43}, {1, 44}, {1, 45}};
+int map[][2] = {{1, 8}, {1, 13}, {2, 19}, {2, 20}, {2, 26}, {1, 28}, {3, 29}, {1, 30}, {1, 31}, {2, 33}, {2, 36}, {1, 42}, {1, 43}, {1, 44}, {1, 45},{5,49}};
 
 //地图行为，根据目前是在第几个路口，执行相关转向操作
 void Map_Action(int *count)
@@ -38,17 +38,17 @@ void Map_Action(int *count)
 		switch (map[map_index][0])
 		{
 		case 1:
-			Straight_go_mm(300, 221 / 2); //走过车身的一半长
+			Straight_go_mm(300, 130); //走过车身的一半长
 			TurnBY_PID(90);				  // Turn_I(0,300,90);
 			Car_Direction_change(1);	  //小车方向转变，1为向左。
 			break;
 		case 2:
-			Straight_go_mm(300, 221 / 2); //走过车身的一半长
+			Straight_go_mm(300, 130); //走过车身的一半长
 			TurnBY_PID(-90);
 			Car_Direction_change(-1);
 			break;
 		case 3:
-			Straight_go_mm(300, 221 / 2); //走过车身的一半长
+			Straight_go_mm(300, 130); //走过车身的一半长
 			TurnBY_PID(180);
 			Car_Direction_change(2);
 			break;
@@ -58,6 +58,14 @@ void Map_Action(int *count)
 			Car_Direction_change(1);
 			*count += 2;
 			Car_Position_add(1);
+			break;
+		case 5:
+			TurnBY_PID(180);
+		
+			Car_Position_add(1);
+			Car_Direction_change(1);
+			*count = 1;
+			map_index=-1;
 			break;
 		default:
 			break;
@@ -87,6 +95,8 @@ int main(void)
 	//	amt1450_Test_UART();        //测试AMT1450，在while中
 
 	//电机相关初始化。
+	
+	MotorDriver_Init(1);
 	MotorDriver_Init(2);
 	MotorDriver_Start(1, PWM_DUTY_LIMIT / 2);
 	MotorDriver_Start(2, PWM_DUTY_LIMIT / 2);
@@ -94,9 +104,9 @@ int main(void)
 	MotorDriver_Start(4, PWM_DUTY_LIMIT / 2);
 	Encoder_Init(2);
 
-	MotorController_Init(330, 64, 2); //初始化调速器，参数1：轮子转一圈输出的脉冲个数；参数2：轮子直径，单位mm；参数3：几个电机需要调速
+	MotorController_Init(13500, 75, 2); //初始化调速器，参数1：轮子转一圈输出的脉冲个数；参数2：轮子直径，单位mm；参数3：几个电机需要调速
 	MotorController_Enable(ENABLE);
-	MotorController_SetAcceleration(8000); //设置加速度值，单位：mm/秒*秒
+	MotorController_SetAcceleration(10000); //设置加速度值，单位：mm/秒*秒
 	Delay_ms(100);
 
 	//定义一个循迹pid参数，并初始化。
@@ -108,7 +118,14 @@ int main(void)
 	//这个标志变量用来判断是不是还在路口
 	uint8_t crossing_flag = 0;
 
-	while (1)
+/*
+Turn_I(0, 100, 90);
+printf("carspeed1%.3f;  carspeed2%.3f\n",Motor_speed1,Motor_speed2);
+		MotorController_SetSpeed(1, 0);				 //电机控制
+		MotorController_SetSpeed(2,0);
+		Delay_ms(1000);
+*/
+	while (1)																		
 	{
 
 		//
@@ -128,6 +145,8 @@ int main(void)
 			map_count++;		 //地图计数加1
 			Car_Position_add(1); //小车位置加1
 			crossing_flag = 0;	 //标志进入路口
+			printf("carPos:%d\n",map_count);
+			printf("carspeed1%.3f;  carspeed2%.3f\n",Motor_speed1,Motor_speed2);
 		}
 		//如果有线出现，那么代表驶出了路口，标志=1
 		if (jump == 2)
@@ -136,12 +155,12 @@ int main(void)
 		}
 
 		Map_Action(&map_count); //地图行为
-
+		
 		int32_t sp_out = Straight_PID(map_count, map[map_index][1]); //直走，目标距离控制pid
 		int32_t fpid_out = Follow_PID(&s_PID, position);			 //循迹pid
-		MotorController_SetSpeed(1, fpid_out - sp_out);				 //电机控制
-		MotorController_SetSpeed(2, fpid_out + sp_out);				 //电机控制
-
+		MotorController_SetSpeed(1, fpid_out +sp_out);				 //电机控制
+		MotorController_SetSpeed(2, fpid_out -sp_out);	
+		
 		//后面这些不知道有什么用，也不敢删，下次问问学长。
 		if (b10msFlag == 1)
 		{

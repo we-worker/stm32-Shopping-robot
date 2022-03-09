@@ -1,7 +1,7 @@
 #include "MotorController.h"
 #include "MotorDriver.h"
-__IO uint16_t MotorController_EncoderResolution= 390;
-__IO uint8_t MotorController_WheelDiameter = 64;//原始64，32为偏差
+__IO uint16_t MotorController_EncoderResolution= 55000;
+__IO uint8_t MotorController_WheelDiameter = 70;
 __IO uint16_t MotorController_Acc=0;
 __IO int16_t MotorController_MotorA_SpeedSet,MotorController_MotorB_SpeedSet,MotorController_MotorC_SpeedSet,MotorController_MotorD_SpeedSet;
 __IO int16_t MotorController_MotorA_SpeedCur,MotorController_MotorB_SpeedCur,MotorController_MotorC_SpeedCur,MotorController_MotorD_SpeedCur;
@@ -13,7 +13,7 @@ __IO uint8_t MotorController_MotorEnabledCount;  //需要调节的电机数量
 __IO float MotorController_KP, MotorController_KI, MotorController_KD;  //PID参数
 
 
-float  Motor_speed1=0;
+float  Motor_speed1=0;//用于获得实时速度
 float  Motor_speed2=0;
 
 //MotorController_Init() 初始化函数
