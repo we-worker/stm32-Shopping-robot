@@ -10,6 +10,8 @@
 #include "BTModule.h"
 //#include "AStarRoute.h"
 #include "DFS_Map.h"
+#include "NanoCommunication.h"
+
 
 void NVIC_Configuration(void); //中断配置
 void GPIO_Config(void);		   //通用输入输出端口配置
@@ -31,7 +33,7 @@ int map[][2] = {{4, 7}, {4, 12}, {2, 19}, {2, 20}, {2, 26}, {1, 28}, {3, 29}, {1
 ,{2,53},{2,54},{2,55},{2,56},{4,61},{4,64},{2,67},{2,68},{3,69},{2,70},{4,71},{1,78},{1,79},{6,84},{6,89},{7,97}};
 
 //下面这个稳一点,原地转
-//int map[][2] = {{4, 7}, {4, 12}, {2, 19}, {2, 20}, {2, 26}, {1, 28}, {3, 29}, {1, 30}, {1, 31}, {6, 32}, {6, 35}, {1, 42}, {1, 43}, {1, 44}, {1, 45},{3,49}
+//int map[][2] = {{1, 8}, {1, 13}, {2, 19}, {2, 20}, {2, 26}, {1, 28}, {3, 29}, {1, 30}, {1, 31}, {2, 33}, {2, 36}, {1, 42}, {1, 43}, {1, 44}, {1, 45},{3,49}
 //,{2,53},{2,54},{2,55},{2,56},{1,62},{1,65},{2,67},{2,68},{3,69},{2,70},{1,72},{1,78},{1,79},{2,85},{2,90},{7,97}};
 
 	
@@ -44,12 +46,12 @@ void Map_Action(int *count)
 		switch (map[map_index][0])
 		{
 		case 1:
-			Straight_go_mm(300, 130); //走过车身的一半长
+			Straight_go_mm(500, 120); //走过车身的一半长
 			TurnBY_PID(90);				  // Turn_I(0,300,90);
 			Car_Direction_change(1);	  //小车方向转变，1为向左。
 			break;
 		case 2:
-			Straight_go_mm(300, 130); //走过车身的一半长
+			Straight_go_mm(500, 120); //走过车身的一半长
 			TurnBY_PID(-90);
 			Car_Direction_change(-1);
 			break;
@@ -59,7 +61,7 @@ void Map_Action(int *count)
 			Car_Direction_change(2);
 			break;
 		case 4:
-			Turn_I(850, 400, 90); //超大转，路口额外+1，因为会错过一个路口,向左
+			Turn_I(850, 340, 90); //超大转，路口额外+1，因为会错过一个路口,向左
 			Car_Position_add(1);
 			Car_Direction_change(1);
 			*count += 2;
@@ -74,7 +76,7 @@ void Map_Action(int *count)
 			//map_index=-1;
 			break;
 		case 6:
-			Turn_I(830, -410, 100); //超大转，路口额外+1，因为会错过一个路口,向右
+			Turn_I(850, -350, 90); //超大转，路口额外+1，因为会错过一个路口,向右
 			Car_Position_add(1);
 			Car_Direction_change(1);
 			*count += 2;
@@ -84,7 +86,7 @@ void Map_Action(int *count)
 			Car_Position_add(1);
 					MotorController_SetSpeed(1, 0);				 //电机控制
 		MotorController_SetSpeed(2,0);
-		Delay_ms(1000);
+		Delay_ms(10000);
 			break;
 		default:
 			break;
@@ -123,7 +125,7 @@ int main(void)
 	MotorDriver_Start(4, PWM_DUTY_LIMIT / 2);
 	Encoder_Init(2);
 
-	MotorController_Init(13500, 75, 2); //初始化调速器，参数1：轮子转一圈输出的脉冲个数；参数2：轮子直径，单位mm；参数3：几个电机需要调速
+	MotorController_Init(13500, 85, 2); //初始化调速器，参数1：轮子转一圈输出的脉冲个数；参数2：轮子直径，单位mm；参数3：几个电机需要调速
 	MotorController_Enable(ENABLE);
 	MotorController_SetAcceleration(10000); //设置加速度值，单位：mm/秒*秒
 	Delay_ms(100);
@@ -143,6 +145,12 @@ printf("carspeed1%.3f;  carspeed2%.3f\n",Motor_speed1,Motor_speed2);
 		MotorController_SetSpeed(1, 0);				 //电机控制
 		MotorController_SetSpeed(2,0);
 		Delay_ms(1000);
+*/
+/*
+USART1_Init();
+while(1){
+	USART1_Process();
+}
 */
 	while (1)																		
 	{

@@ -34,9 +34,9 @@ void turn_PIDInit(PID *s_PID)
 	s_PID->lastError = 0;
 	s_PID->prevError = 0;
 
-	s_PID->kp = 4;
+	s_PID->kp = 6;
 	s_PID->ki = 0;
-	s_PID->kd = 2;
+	s_PID->kd = 3;
 
 	s_PID->filter = 0.3;
 	s_PID->lastFilter = 0;
@@ -68,8 +68,8 @@ int32_t Straight_PID(int nowPos, int targetPos)
 
 	int kp = 700;
 	int out = (targetPos - nowPos) * kp;
-	if (out >= 900)
-		out = 900;
+	if (out >= 1000)
+		out = 1000;
 	return (out + dspeed) / 2; //目标速度与自身速度加和平均是为了速度过度更平滑
 }
 
@@ -142,9 +142,9 @@ void TurnBY_PID(int turn_angle)
 		MotorController_SetSpeed(2, out);
 	}
 	//小挺顿一下
-	MotorController_SetSpeed(1, 0);
-	MotorController_SetSpeed(2, 0);
-	Delay_ms(50);
+	//MotorController_SetSpeed(1, 0);
+	//MotorController_SetSpeed(2, 0);
+	//Delay_ms(50);
 }
 
 //转向，输入参数：基准前进速度，转速差，旋转角度  自动转好预设角度，原理和上面pid转向大同小异
@@ -378,7 +378,7 @@ void Drive_Route(int nSpeed, int tox, int toy)
 {
 	int way[50] = {0};
 
-	FindPath(way, car_position[0], car_position[1], tox, toy);
+	//FindPath(way, car_position[0], car_position[1], tox, toy);
 
 	for (int i = 1; i < 50 && way[i] != -1; i++)
 	{

@@ -450,16 +450,6 @@
               <FilePath>.\User\PID.h</FilePath>
             </File>
             <File>
-              <FileName>AStarRoute.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\User\AStarRoute.h</FilePath>
-            </File>
-            <File>
-              <FileName>AStarRoute.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\AStarRoute.c</FilePath>
-            </File>
-            <File>
               <FileName>DFS_Map.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\DFS_Map.c</FilePath>
@@ -468,6 +458,16 @@
               <FileName>DFS_Map.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\User\DFS_Map.h</FilePath>
+            </File>
+            <File>
+              <FileName>NanoCommunication.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\NanoCommunication.c</FilePath>
+            </File>
+            <File>
+              <FileName>NanoCommunication.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\NanoCommunication.h</FilePath>
             </File>
           </Files>
         </Group>
