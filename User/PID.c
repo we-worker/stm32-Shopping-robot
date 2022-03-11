@@ -18,7 +18,7 @@ void s_PIDInit(PID *s_PID)
 	s_PID->lastError = 0;
 	s_PID->prevError = 0;
 
-	s_PID->kp = 6;//old:3.8 0 1.4
+	s_PID->kp = 8;//old:3.8 0 1.4
 	s_PID->ki = 0;
 	s_PID->kd = 1.4;
 	s_PID->target = 76;
@@ -34,7 +34,7 @@ void turn_PIDInit(PID *s_PID)
 	s_PID->lastError = 0;
 	s_PID->prevError = 0;
 
-	s_PID->kp = 3;
+	s_PID->kp = 4;
 	s_PID->ki = 0;
 	s_PID->kd = 2;
 
@@ -120,7 +120,7 @@ void TurnBY_PID(int turn_angle)
 		if (jump == 2)
 			position = 0.5f * (count[0] + count[1]); // position=两次跳变的中间位置，即是线的位置
 
-		if (position > 68 && position < 80 && now_angle > turn_angle / 3.0 * 2) //如果线在中心位置并且旋转角度在预期的2/3以上时，直接退出
+		if (position > 60 && position < 85 && now_angle > turn_angle / 3.0 * 2) //如果线在中心位置并且旋转角度在预期的2/3以上时，直接退出
 		{
 			break;
 		}
@@ -157,8 +157,8 @@ void Turn_I(int nSpeed, int d_speed, int turn_angle)
 		turn_angle = -turn_angle;
 	}
 
-	MotorController_SetSpeed(1, -nSpeed + d_speed);
-	MotorController_SetSpeed(2, nSpeed + d_speed);
+	MotorController_SetSpeed(1, nSpeed + d_speed);
+	MotorController_SetSpeed(2, -nSpeed + d_speed);
 	extern float Motor_speed1;
 	extern float Motor_speed2;
 
@@ -179,7 +179,7 @@ void Turn_I(int nSpeed, int d_speed, int turn_angle)
 		if (jump == 2)
 			position = 0.5f * (count[0] + count[1]); // position=两次跳变的中间位置
 
-		if (position > 68 && position < 80 && now_angle > turn_angle / 3.0 * 2)
+		if (position > 50 && position < 100 && now_angle > turn_angle / 3.0 * 2)
 		{
 			break;
 		}

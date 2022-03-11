@@ -27,8 +27,14 @@ int map_index = 0;
 int map_count = 0;
 extern int car_direction;
 //地图，前一个为行为，1，2，3，4分别为左转，右转，向后转，向左大转。后一个为第几个路口。
-int map[][2] = {{1, 8}, {1, 13}, {2, 19}, {2, 20}, {2, 26}, {1, 28}, {3, 29}, {1, 30}, {1, 31}, {2, 33}, {2, 36}, {1, 42}, {1, 43}, {1, 44}, {1, 45},{5,49}};
+int map[][2] = {{4, 7}, {4, 12}, {2, 19}, {2, 20}, {2, 26}, {1, 28}, {3, 29}, {1, 30}, {1, 31}, {6, 32}, {6, 35}, {1, 42}, {1, 43}, {1, 44}, {1, 45},{3,49}
+,{2,53},{2,54},{2,55},{2,56},{4,61},{4,64},{2,67},{2,68},{3,69},{2,70},{4,71},{1,78},{1,79},{6,84},{6,89},{7,97}};
 
+//下面这个稳一点,原地转
+//int map[][2] = {{4, 7}, {4, 12}, {2, 19}, {2, 20}, {2, 26}, {1, 28}, {3, 29}, {1, 30}, {1, 31}, {6, 32}, {6, 35}, {1, 42}, {1, 43}, {1, 44}, {1, 45},{3,49}
+//,{2,53},{2,54},{2,55},{2,56},{1,62},{1,65},{2,67},{2,68},{3,69},{2,70},{1,72},{1,78},{1,79},{2,85},{2,90},{7,97}};
+
+	
 //地图行为，根据目前是在第几个路口，执行相关转向操作
 void Map_Action(int *count)
 {
@@ -48,12 +54,12 @@ void Map_Action(int *count)
 			Car_Direction_change(-1);
 			break;
 		case 3:
-			Straight_go_mm(300, 130); //走过车身的一半长
+			//Straight_go_mm(300, 130); //走过车身的一半长
 			TurnBY_PID(180);
 			Car_Direction_change(2);
 			break;
 		case 4:
-			Turn_I(850, 200, 90); //超大转，路口额外+1，因为会错过一个路口
+			Turn_I(850, 400, 90); //超大转，路口额外+1，因为会错过一个路口,向左
 			Car_Position_add(1);
 			Car_Direction_change(1);
 			*count += 2;
@@ -64,8 +70,21 @@ void Map_Action(int *count)
 		
 			Car_Position_add(1);
 			Car_Direction_change(1);
-			*count = 1;
-			map_index=-1;
+			//*count = 1;
+			//map_index=-1;
+			break;
+		case 6:
+			Turn_I(830, -410, 100); //超大转，路口额外+1，因为会错过一个路口,向右
+			Car_Position_add(1);
+			Car_Direction_change(1);
+			*count += 2;
+			Car_Position_add(1);
+			break;
+		case 7:
+			Car_Position_add(1);
+					MotorController_SetSpeed(1, 0);				 //电机控制
+		MotorController_SetSpeed(2,0);
+		Delay_ms(1000);
 			break;
 		default:
 			break;
@@ -119,7 +138,7 @@ int main(void)
 	uint8_t crossing_flag = 0;
 
 /*
-Turn_I(0, 100, 90);
+Turn_I(850, 400, 90);
 printf("carspeed1%.3f;  carspeed2%.3f\n",Motor_speed1,Motor_speed2);
 		MotorController_SetSpeed(1, 0);				 //电机控制
 		MotorController_SetSpeed(2,0);
@@ -146,7 +165,7 @@ printf("carspeed1%.3f;  carspeed2%.3f\n",Motor_speed1,Motor_speed2);
 			Car_Position_add(1); //小车位置加1
 			crossing_flag = 0;	 //标志进入路口
 			printf("carPos:%d\n",map_count);
-			printf("carspeed1%.3f;  carspeed2%.3f\n",Motor_speed1,Motor_speed2);
+			//printf("carspeed1%.3f;  carspeed2%.3f\n",Motor_speed1,Motor_speed2);
 		}
 		//如果有线出现，那么代表驶出了路口，标志=1
 		if (jump == 2)
