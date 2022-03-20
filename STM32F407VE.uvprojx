@@ -469,6 +469,16 @@
               <FileType>5</FileType>
               <FilePath>.\User\NanoCommunication.h</FilePath>
             </File>
+            <File>
+              <FileName>ArmSolution.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\ArmSolution.c</FilePath>
+            </File>
+            <File>
+              <FileName>ArmSolution.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\ArmSolution.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

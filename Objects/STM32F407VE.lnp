@@ -13,6 +13,7 @@
 ".\objects\pid.o"
 ".\objects\dfs_map.o"
 ".\objects\nanocommunication.o"
+".\objects\armsolution.o"
 ".\objects\startup_stm32f40_41xxx.o"
 ".\objects\stm32f4xx_adc.o"
 ".\objects\stm32f4xx_rcc.o"

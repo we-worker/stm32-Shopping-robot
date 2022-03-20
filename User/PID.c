@@ -34,7 +34,7 @@ void turn_PIDInit(PID *s_PID)
 	s_PID->lastError = 0;
 	s_PID->prevError = 0;
 
-	s_PID->kp = 6;
+	s_PID->kp = 4.5;
 	s_PID->ki = 0;
 	s_PID->kd = 3;
 

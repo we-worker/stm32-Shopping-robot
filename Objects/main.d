@@ -46,3 +46,4 @@
 .\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 .\objects\main.o: User\DFS_Map.h
 .\objects\main.o: User\NanoCommunication.h
+.\objects\main.o: User\ArmSolution.h
