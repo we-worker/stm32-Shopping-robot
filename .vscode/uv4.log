@@ -1,3 +1,34 @@
-Load "c:\\Users\\Arc\\Documents\\codeProjects\\keil\\STM32F407VE循迹比赛\\Objects\\STM32F407VE.axf" 
-Erase Done.Programming Done.Verify OK.Application running ...
-Flash Load finished at 23:44:41
+*** Using Compiler 'V5.06 update 4 (build 422)', folder: 'C:\works\Keil_v5\ARM\ARMCC\Bin'
+Build target 'STM32F407VE'
+compiling main.c...
+User\PID.h(43): warning:  #1295-D: Deprecated declaration Crossing_Detection - give arg types
+  void Crossing_Detection();//检测是否经过红绿灯
+User\PID.h(44): warning:  #1295-D: Deprecated declaration Map_Action - give arg types
+  void Map_Action();//地图行为，根据目前是在第几个路口，执行相关转向操作
+User\ArmSolution.h(1): warning:  #1295-D: Deprecated declaration ArmDriver_Init - give arg types
+  void ArmDriver_Init();
+User\ArmSolution.h(3): warning:  #1-D: last line of file ends without a newline
+  void ArmSolution(double x,double y);
+User\main.c(96): warning:  #128-D: loop is not reachable
+  	while (0)
+User\main.c: 5 warnings, 0 errors
+compiling ArmSolution.c...
+User\ArmSolution.h(1): warning:  #1295-D: Deprecated declaration ArmDriver_Init - give arg types
+  void ArmDriver_Init();
+User\ArmSolution.h(3): warning:  #1-D: last line of file ends without a newline
+  void ArmSolution(double x,double y);
+User\ArmSolution.c(147): warning:  #223-D: function "printf" declared implicitly
+  	printf("角3：%.2f	tsin：%.2f	\n",o3,tsin);
+User\ArmSolution.c(176): warning:  #223-D: function "Delay_ms" declared implicitly
+  		Delay_ms(3000);
+User\ArmSolution.c: 4 warnings, 0 errors
+compiling PID.c...
+User\PID.h(43): warning:  #1295-D: Deprecated declaration Crossing_Detection - give arg types
+  void Crossing_Detection();//检测是否经过红绿灯
+User\PID.h(44): warning:  #1295-D: Deprecated declaration Map_Action - give arg types
+  void Map_Action();//地图行为，根据目前是在第几个路口，执行相关转向操作
+User\PID.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=25892 RO-data=1148 RW-data=196 ZI-data=4988  
+".\Objects\STM32F407VE.axf" - 0 Error(s), 11 Warning(s).
+Build Time Elapsed:  00:00:01

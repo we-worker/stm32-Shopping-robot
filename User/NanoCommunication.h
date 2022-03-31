@@ -13,9 +13,7 @@
 #define FRAME_START 0xA5 //帧头
 #define FRAME_END 0x5A  //帧尾
 
-//这里把数据帧接收标志和接收缓冲区定义成可供BTModule.c以外的源代码直接使用，只要include了BTModule.h文件。
-extern __IO uint8_t USART_Rx2Buff[FRAME_BYTE_LENGTH]; //接收缓冲区
-extern __IO uint8_t USART_FrameFlag; //接收完整数据帧标志，1完整，0不完整
+
 
 void USART1_Init(void);
 void USART1_OUT(USART_TypeDef* USARTx, uint8_t *Data,...);

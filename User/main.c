@@ -25,85 +25,10 @@ uint16_t n100msCount;
 int32_t nSpeed;
 
 //定义与地图行为有关的变量
-int map_index = 0;
-int map_count = 0;
 extern int car_direction;
-//地图，前一个为行为，1，2，3，4分别为左转，右转，向后转，向左大转。后一个为第几个路口。
 
-//这个即走大弯也走小弯，最激进
-int map[][2] = {{4, 7}, {4, 12}, {8, 18}, {2, 20}, {8, 25}, {9, 27}, {3, 29}, {1, 30}, {1, 31}, {6, 32}, {6, 35}, {9, 41}, {1, 43}, {1, 44}, {1, 45}, {3, 49}, {8, 52}, {2, 54}, {2, 55}, {2, 56}, {4, 61}, {4, 64}, {2, 67}, {2, 68}, {3, 69}, {2, 70}, {4, 71}, {9, 77}, {1, 79}, {6, 84}, {6, 89}, {7, 97}};
-
-// 1左90，2右90，3 180度，4向左大弯，5没用，6向右打完，7停车，8向右小弯，9向左小弯
-
-//地图行为，根据目前是在第几个路口，执行相关转向操作
-void Map_Action(int *count)
-{
-
-	if (*count == map[map_index][1])
-	{
-		switch (map[map_index][0])
-		{
-		case 1:
-			Straight_go_mm(500, 120); //走过车身的一半长
-			TurnBY_PID(90);			  // Turn_I(0,300,90);
-			Car_Direction_change(1);  //小车方向转变，1为向左。
-			break;
-		case 2:
-			Straight_go_mm(500, 120); //走过车身的一半长
-			TurnBY_PID(-90);
-			Car_Direction_change(-1);
-			break;
-		case 3:
-			// Straight_go_mm(300, 130); //走过车身的一半长
-			TurnBY_PID(180);
-			Car_Direction_change(2);
-			break;
-		case 4:
-			Turn_I(850, 330, 90); //超大转，路口额外+1，因为会错过一个路口,向左
-			Car_Position_add(1);
-			Car_Direction_change(1);
-			*count += 2;
-			Car_Position_add(1);
-			break;
-		case 5:
-			TurnBY_PID(180);
-
-			Car_Position_add(1);
-			Car_Direction_change(1);
-			//*count = 1;
-			// map_index=-1;
-			break;
-		case 6:
-			Turn_I(870, 375, -90); //超大转，路口额外+1，因为会错过一个路口,向右
-			Car_Position_add(1);
-			Car_Direction_change(1);
-			*count += 2;
-			Car_Position_add(1);
-			break;
-		case 7: //停车
-			Car_Position_add(1);
-			MotorController_SetSpeed(1, 0); //电机控制
-			MotorController_SetSpeed(2, 0);
-			Delay_ms(10000);
-			break;
-		case 8:
-			Straight_go_mm(600, 350); //右边行进间转向
-			Turn_I(600, 500, -90);
-			Car_Direction_change(-1);
-			*count += 1;
-			break;
-		case 9:
-			Straight_go_mm(600, 350); //左边行进间转向
-			Turn_I(600, 500, 90);
-			Car_Direction_change(-1);
-			*count += 1;
-			break;
-		default:
-			break;
-		}
-		map_index++;
-	}
-}
+extern uint8_t begin, jump, count[6];//循迹模块的相关参数
+extern uint8_t line_position;//直线当前所在的位置
 
 int main(void)
 {
@@ -114,19 +39,23 @@ int main(void)
 	Key_Init(2);		  //只使用Key1，Key2的引脚可以做其他用途
 	init_AMT1450_UART();  // 初始化amt1450串口通信，串口使用UART5
 	USART2_Init();
+	USART1_Init();
 	// TCRT5000_config();
 	Delay_ms(100);
 
+	
+	printf("hello\n");
+	
 	while (Key_Released(2) == 0)
 	{
 	} //如果Key1没有按下，则一直等待
 
 	Delay_ms(10);
 	AMT1450_UART_Cmd(ENABLE);
-	//	amt1450_Test_UART();        //测试AMT1450，在while中
 
 	//电机相关初始化。
-
+	
+	/*
 	MotorDriver_Init(1);
 	MotorDriver_Init(2);
 	MotorDriver_Start(1, PWM_DUTY_LIMIT / 2);
@@ -139,55 +68,51 @@ int main(void)
 	MotorController_Enable(ENABLE);
 	MotorController_SetAcceleration(10000); //设置加速度值，单位：mm/秒*秒
 	Delay_ms(100);
-
+	
+	*/
 	//定义一个循迹pid参数，并初始化。
 	PID s_PID;
 	s_PIDInit(&s_PID);
 
 	nSpeed = 700;
 
-	//这个标志变量用来判断是不是还在路口
-	uint8_t crossing_flag = 0;
 	ArmDriver_Init();
-	//ArmDriver_Init2();
-	//ArmDriver_Init3();
-	
-	/*
-	Turn_I(850, 400, 90);
-	printf("carspeed1%.3f;  carspeed2%.3f\n",Motor_speed1,Motor_speed2);
-			MotorController_SetSpeed(1, 0);				 //电机控制
-			MotorController_SetSpeed(2,0);
-			Delay_ms(1000);
-	*/
-	/*
-	USART1_Init();
+
+
+	printf("hello\n");
+	int t=1;
+	int height =100;int flag=1;
 	while(1){
-		USART1_Process();
-	}
-	*/
-	int angle = 0;
-	int flag = 1;
-	while (1)
-	{
-		angle=90;
-		Delay_ms(20);
-		SetServoAngle(1, angle);
-		SetServoAngle(2, angle);
-		SetServoAngle(4, angle);
-		SetServoAngle(3, angle);
-		SetServoAngle(5, angle);
-		SetServoAngle(6, angle);
-		SetServoAngle(7, angle);
-		SetServoAngle(8, angle);
-		angle += 3 * flag;
-		if (angle >= 180)
+
+		
+		if (b10msFlag == 1)
 		{
-			flag = -1;
+			b10msFlag = 0; //把 10ms 标志位清零
+			n10msCount++;
+			// 10ms标志每10个计数等于100ms
+			if (n10msCount % 10 == 0)
+				b100msFlag = 1;
+			
+			t++;
+			if(t%5==0){
+					height=height+1*flag;
+					if(height>=220){
+						flag=-1;
+					}
+					if(height<100){
+						flag=1;
+					}
+				//ArmSolution(-50,height);
+			}
+			Slow_Pwm(1);
+			Slow_Pwm(2);
+			Slow_Pwm(3);
+			Slow_Pwm(4);
 		}
-		if (angle <= 0)
-		{
-			flag = 1;
-		}
+
+		//Delay_ms(50);
+		//USART1_Process();
+		//printf("hello\n");
 	}
 	while (0)
 	{
@@ -196,41 +121,21 @@ int main(void)
 		//不断循环执行的代码块
 		//
 
-		// AMT1450循迹模块的使用，见https://www.luheqiu.com/deane/begin-smart_tracking_car/
-		uint8_t begin, jump, count[6]; // 最大6个跳变，即3条线
-		uint8_t position;
-		get_AMT1450Data_UART(&begin, &jump, count); //讲数据存储在三个变量中
-		if (jump == 2)
-			position = 0.5f * (count[0] + count[1]); // position=两次跳变的中间位置，即线的位置
-
-		//如果颜色没有跳变，且最左端为白色，且没进入路口，则
-		if (jump == 0 && begin == 0 && crossing_flag == 1)
-		{
-			map_count++;		 //地图计数加1
-			Car_Position_add(1); //小车位置加1
-			crossing_flag = 0;	 //标志进入路口
-			printf("carPos:%d\n", map_count);
-			// printf("carspeed1%.3f;  carspeed2%.3f\n",Motor_speed1,Motor_speed2);
-		}
-		//如果有线出现，那么代表驶出了路口，标志=1
-		if (jump == 2)
-		{
-			crossing_flag = 1;
-		}
+		Crossing_Detection();
 
 		Map_Action(&map_count); //地图行为
 
-		int32_t sp_out = Straight_PID(map_count, map[map_index][1]); //直走，目标距离控制pid
-		int32_t fpid_out = Follow_PID(&s_PID, position);			 //循迹pid
-		MotorController_SetSpeed(1, fpid_out + sp_out);				 //电机控制
-		MotorController_SetSpeed(2, fpid_out - sp_out);
+		//int32_t sp_out = Straight_PID(map_count, map[map_index][1]); //直走，目标距离控制pid
+		int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
+		MotorController_SetSpeed(1, fpid_out+500);				 //电机控制
+		MotorController_SetSpeed(2, fpid_out-500);
 
-		//后面这些不知道有什么用，也不敢删，下次问问学长。
+
+		//后面是系统的滴答计时器
 		if (b10msFlag == 1)
 		{
 			b10msFlag = 0; //把 10ms 标志位清零
 			n10msCount++;
-
 			// 10ms标志每10个计数等于100ms
 			if (n10msCount % 10 == 0)
 				b100msFlag = 1;
@@ -259,6 +164,7 @@ void NVIC_Configuration(void)
 	if (SysTick_Config(SystemCoreClock / 100000))
 	{
 		/* Capture error */
+		
 		while (1)
 			;
 	}

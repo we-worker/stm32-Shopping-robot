@@ -53,8 +53,8 @@ void USART2_Init(void)
 	
 		//使能USART2中断
   NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);	
 }
@@ -231,11 +231,11 @@ void USART_Process(void) //处理数据帧
 	if(USART_FrameFlag == 1)
 	{
 		//将数据原封不动发送回去
-//		for(i=0;i<FRAME_BYTE_LENGTH;i++)
-//		{
-//			USART_SendData(USART2,USART_Rx2Buff[i]);
-//			while(USART_GetFlagStatus(USART2, USART_FLAG_TC)==RESET);
-//		}
+		for(uint8_t i=0;i<FRAME_BYTE_LENGTH;i++)
+		{
+			USART_SendData(USART2,USART_Rx2Buff[i]);
+			while(USART_GetFlagStatus(USART2, USART_FLAG_TC)==RESET);
+		}
 		
 		if(USART_Rx2Buff[1] == 0x11) //如果命令字节等于0x11，则是设置PID参数指令，这些协议可以自己定义
 		{
@@ -269,15 +269,17 @@ void USART_Process(void) //处理数据帧
   */
 void USART2_IRQHandler(void)      //串口2中断服务
 {
+
 	uint8_t getchar;
-  if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)	   //判断读寄存器是否为空
+  if(USART_GetITStatus(USART2, USART_IT_RXNE) !=RESET)	   //判断读寄存器是否为空
   {	
-    /* Read one byte from the receive data register */
+
     getchar = USART_ReceiveData(USART2);   //将读寄存器的数据缓存到接收缓冲区里
 	
     USART_GetChar(getchar);
   }
-  
+
+
   if(USART_GetITStatus(USART2, USART_IT_TXE) != RESET)                   //这段是为了避免STM32 USART第一个字节发送不出去的BUG 
   { 
      USART_ITConfig(USART2, USART_IT_TXE, DISABLE);					     //禁止发送缓冲器空中断

@@ -155,14 +155,14 @@ void get_AMT1450Data_UART(uint8_t *begin_Color,uint8_t *jump_Count,uint8_t *jump
 }
 
 
-uint8_t begin,jump,count[6];			// 最大6个跳变，即3条线
-uint8_t position;
+
 void amt1450_Test_UART(void)
 {
-    
+    uint8_t begin,jump,count[6];			// 最大6个跳变，即3条线
+		//uint8_t position;
 	  while(1){
 		    get_AMT1450Data_UART(&begin, &jump, count);
-			  if(jump == 2) position = 0.5f * (count[0] + count[1]);		
+			  //if(jump == 2) position = 0.5f * (count[0] + count[1]);		
 		    Delay_ms(10);
 		}
 }

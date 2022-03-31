@@ -1,15 +1,28 @@
 #include "stm32f4xx.h"
 #include "ArmSolution.h"
-
-#define PWM_DUTY_LIMIT 10000 // PWM占空比范围0~10000,代表20ms    250-1250 代表 0-180度
+#include "delay.h"
 #include "math.h"
 
-#define L1 120
-#define L2 36
-#define	L3 115
-#define L4 33
-#define L5 125
 
+#define PWM_DUTY_LIMIT 10000 // PWM占空比范围0~10000,代表20ms    250-1250 代表 0-180度
+#define L1 120
+#define L2 45
+#define	L3 118
+#define L4 35
+#define L5 137 //136
+#define L6 22
+
+uint16_t Slow_pwm1=250;
+uint16_t Slow_pwm2=250;
+uint16_t Slow_pwm3=250;
+uint16_t Slow_pwm4=250;
+uint16_t Slow_pwm5=250;
+uint16_t Slow_pwm6=250;
+uint16_t Slow_pwm7=250;
+uint16_t Slow_pwm8=250;
+
+float arm_angle4=90;
+int height=60;
 
 void ArmDriver_Init()
 {
@@ -60,6 +73,8 @@ void ArmDriver_Init()
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 
 	TIM_TimeBaseInit(TIM9, &TIM_TimeBaseStructure);
+	
+	TIM_TimeBaseStructure.TIM_Prescaler = 336/2 - 1;
 	TIM_TimeBaseInit(TIM5, &TIM_TimeBaseStructure);
 	TIM_TimeBaseInit(TIM13, &TIM_TimeBaseStructure);
 	TIM_TimeBaseInit(TIM14, &TIM_TimeBaseStructure);
@@ -102,52 +117,197 @@ void ArmDriver_Init()
 	TIM_Cmd(TIM5, ENABLE);
 	TIM_Cmd(TIM13, ENABLE);
 	TIM_Cmd(TIM14, ENABLE);
+	
+	//初始化一下：
+	TIM9->CCR1=500;
+	TIM9->CCR2=500;
+	TIM5->CCR1=500;
+	TIM5->CCR2=500;
+	TIM5->CCR3=500;
+	TIM5->CCR4=500;
+	TIM13->CCR1=500;
+	TIM14->CCR1=500;
+
 }
 
 
 
-void SetServoAngle(int nServo, double angle)
+void SetServoAngle(int nServo, float angle)
 {
 	if (angle < 0)
 		return;
 	int pwm = angle * 1.0 / 90 / 20 * PWM_DUTY_LIMIT + 250; //解算出对应的pwm波
-
+	
+	if(pwm>1250)
+		pwm=1250;
+	if(pwm<250)
+		pwm=250;
+	
 	switch (nServo)
 	{
 	case 1:
-		TIM9->CCR1 = pwm;
+		Slow_pwm1=pwm;
+		break;
 	case 2:
-		TIM9->CCR2 = pwm;
+		Slow_pwm2=pwm;
+		break;
 	case 3:
-		TIM5->CCR1 = pwm;
+		Slow_pwm3=pwm;
+		break;
 	case 4:
-		TIM5->CCR2 = pwm;
+		Slow_pwm4=pwm;
+		break;
 	case 5:
-		TIM5->CCR3 = pwm;
+		Slow_pwm5=pwm;
+		break;
 	case 6:
-		TIM5->CCR4 = pwm;
+		Slow_pwm6=pwm;
+		break;
 	case 7:
-		TIM13->CCR1 = pwm;
+		Slow_pwm7=pwm;
+		break;
 	case 8:
-		TIM14->CCR1 = pwm;
+		Slow_pwm8=pwm;
+		break;
 	default:
 		break;
 	}
 }
 void ArmSolution(double x,double y){
 
+	//arm 7 90-120
+	
+	
 	//求解角3
-	double tsin=1.0*(x*x+y*y+L5*L5-L1*L1)/(2*L5*sqrt(x*x+y*y));
-	double o3=3.1415926-asin(tsin)-atan(x/y);
+	//求解角3
+	double t1=2*L5*y+2*L6*x;
+	double t2=2*L5*x-2*L6*y;
+
+	double tsin=1.0*(x*x+y*y+L5*L5+L6*L6-L1*L1)/(sqrt(t1*t1+t2*t2));
+	if(tsin>1 || tsin <-1)
+		return ;
+	double o3=3.1415926-asin(tsin)-atan(t2/t1);
+	if(y==0)
+		return ;
+ 	//printf("角3：%.2f	tsin：%.2f	\n",o3,tsin);
 	//求解角1
 	tsin=1.0*(x*x+y*y+L1*L1-L5*L5)/(2*L1*sqrt(x*x+y*y));
+	if(tsin>1 || tsin <-1)
+		return ;
 	double o1=asin(tsin)-atan(x/y);
 	//求解角2
-	double t1=L1*cos(o1)-L4*cos(o3);
-	double t2=L1*sin(o1)-L4*sin(o3);
+	t1=L1*cos(o1)-L4*cos(o3);
+	t2=L1*sin(o1)-L4*sin(o3);
+	if(t1*t1+t2*t2<0)
+		return ;
 	tsin=1.0*(t1*t1+t2*t2+L2*L2-L3*L3)/(2*L2*sqrt(t1*t1+t2*t2));
+	if(tsin>1 || tsin <-1)
+		return ;
 	double o2=asin(tsin)-atan(t1/t2);
-
-	double o4=o3-3.14159;
-	//printf("角1：%.2f	角2：%.2f	角3：%.2f	角4：%.2f",o1*360/6.28,o2*360/6.28,o3*360/6.28,o4*360/6.28);
+	double o4=3.14159-o3;
+	
+	//如果解有问题就退出
+	if(o3<-3.14*2||o3>3.14*2)
+		return ;
+	
+	//真实舵机解算
+	o1=o1*360/6.28;
+	o2=o2*360/6.28;
+	o4=o4*360/6.28;
+	
+	
+	o1=o1-24.66;
+	o2=90-o2;
+	o4=90+o4;
+	
+	//printf("角1：%.2f	角2：%.2f	角3：%.2f	角4：%.2f\n",o1,o2,o3,o4);
+	
+		
+		SetServoAngle(1, o1);
+		SetServoAngle(2, o2);
+		SetServoAngle(3, o4);
 }
+
+
+void Slow_Pwm(uint8_t nServo)
+{
+	int8_t flag=1;
+	switch (nServo)
+	{
+	case 1:
+		if(TIM9->CCR1>Slow_pwm1)
+			flag=-1;
+		if(TIM9->CCR1==Slow_pwm1)
+			flag=0;
+		if(-flag*TIM9->CCR1+flag*Slow_pwm1>10)
+			flag=10*flag;
+		TIM9->CCR1 =TIM9->CCR1+flag;
+		break;
+	case 2:
+		if(TIM9->CCR2>Slow_pwm2)
+			flag=-1;
+		if(TIM9->CCR2==Slow_pwm2)
+			flag=0;
+		if(-flag*TIM9->CCR2+flag*Slow_pwm2>10)
+			flag=10*flag;
+		TIM9->CCR2 =TIM9->CCR2+flag;
+		break;
+	case 3:
+		if(TIM5->CCR1>Slow_pwm3)
+			flag=-1;
+		if(TIM5->CCR1==Slow_pwm3)
+			flag=0;
+		if(-flag*TIM5->CCR1+flag*Slow_pwm3>10)
+			flag=10*flag;
+		TIM5->CCR1=TIM5->CCR1+flag;
+		break;
+	case 4:
+		if(TIM5->CCR2>Slow_pwm4)
+			flag=-1;
+		if(TIM5->CCR2==Slow_pwm4)
+			flag=0;
+		if(-flag*TIM5->CCR2+flag*Slow_pwm4>10)
+			flag=10*flag;
+		TIM5->CCR2 =TIM5->CCR2+flag;
+		break;
+	case 5:
+		if(TIM5->CCR3>Slow_pwm5)
+			flag=-1;
+		if(TIM5->CCR3==Slow_pwm5)
+			flag=0;
+		if(-flag*TIM5->CCR3+flag*Slow_pwm5>10)
+			flag=10*flag;
+		TIM5->CCR3 =TIM5->CCR3+flag;
+		break;
+	case 6:
+		if(TIM5->CCR4>Slow_pwm6)
+			flag=-1;
+		if(TIM5->CCR4==Slow_pwm6)
+			flag=0;
+		if(-flag*TIM5->CCR4+flag*Slow_pwm6>10)
+			flag=10*flag;
+		TIM5->CCR4 =TIM5->CCR4+flag;
+		break;
+	case 7:
+		if(TIM13->CCR1>Slow_pwm7)
+			flag=-1;
+		if(TIM13->CCR1==Slow_pwm7)
+			flag=0;
+		if(-flag*TIM13->CCR1+flag*Slow_pwm7>10)
+			flag=10*flag;
+		TIM13->CCR1=TIM13->CCR1+flag;
+		break;
+	case 8:
+		if(TIM14->CCR1>Slow_pwm8)
+			flag=-1;
+		if(TIM14->CCR1==Slow_pwm8)
+			flag=0;
+		if(-flag*TIM14->CCR1+flag*Slow_pwm8>10)
+			flag=10*flag;
+		TIM14->CCR1=TIM14->CCR1+flag;
+		break;
+	default:
+		break;
+	}
+}
+

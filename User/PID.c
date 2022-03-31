@@ -6,9 +6,17 @@
 #include "AStarRoute.h"
 #include "stdlib.h"
 
+int crossing_flag; //用于十字路口检测的临时变量
+int map_count;	   //地图十字路口计数
+int map_index;	   //用于地图内部下一个操作的索引
+
 //小车默认方向和位置。
 int car_direction = 3;
 int car_position[2] = {9, 8};
+
+uint8_t begin, jump, count[6];
+uint8_t line_position;
+
 #define car_D 320 //小车直径定义
 
 //循迹pid的参数初始化
@@ -18,7 +26,7 @@ void s_PIDInit(PID *s_PID)
 	s_PID->lastError = 0;
 	s_PID->prevError = 0;
 
-	s_PID->kp = 8;//old:3.8 0 1.4
+	s_PID->kp = 8; // old:3.8 0 1.4
 	s_PID->ki = 0;
 	s_PID->kd = 1.4;
 	s_PID->target = 76;
@@ -34,9 +42,9 @@ void turn_PIDInit(PID *s_PID)
 	s_PID->lastError = 0;
 	s_PID->prevError = 0;
 
-	s_PID->kp = 4.5;
+	s_PID->kp = 2;
 	s_PID->ki = 0;
-	s_PID->kd = 3;
+	s_PID->kd = 1.5;
 
 	s_PID->filter = 0.3;
 	s_PID->lastFilter = 0;
@@ -66,10 +74,10 @@ int32_t Straight_PID(int nowPos, int targetPos)
 
 	float dspeed = fabs(Motor_speed1 - Motor_speed2) / 2; //获得双轮转速的实际值的平均值
 
-	int kp = 700;
+	int kp = 400;
 	int out = (targetPos - nowPos) * kp;
-	if (out >= 1000)
-		out = 1000;
+	if (out >= 800)
+		out = 800;
 	return (out + dspeed) / 2; //目标速度与自身速度加和平均是为了速度过度更平滑
 }
 
@@ -113,14 +121,12 @@ void TurnBY_PID(int turn_angle)
 
 		//开始强制修正,旋转角度在预期的2/3以上时，如果检测到线在中心位置，直接推出旋转。
 		//标准的获取前方探头的数据
-		uint8_t begin, jump, count[6];
-		uint8_t position;
 		get_AMT1450Data_UART(&begin, &jump, count);
 
 		if (jump == 2)
-			position = 0.5f * (count[0] + count[1]); // position=两次跳变的中间位置，即是线的位置
+			line_position = 0.5f * (count[0] + count[1]); // line_position=两次跳变的中间位置，即是线的位置
 
-		if (position > 60 && position < 85 && now_angle > turn_angle / 3.0 * 2) //如果线在中心位置并且旋转角度在预期的2/3以上时，直接退出
+		if (line_position > 60 && line_position < 85 && now_angle > turn_angle / 3.0 * 2) //如果线在中心位置并且旋转角度在预期的2/3以上时，直接退出
 		{
 			break;
 		}
@@ -134,17 +140,17 @@ void TurnBY_PID(int turn_angle)
 		int out = (Turn_PID(&t_PID, now_angle, turn_angle) + dspeed / 2) / 2; //更加平滑使用转向pid得到数值
 		//根据是否为左转变化一下，同时需要固定30速度，不然后面转的太慢了
 		if (flag_left == 0)
-			out = -out - 70;
+			out = -out - 50;
 		else
-			out = out + 70;
+			out = out + 50;
 		//电机附速度值
 		MotorController_SetSpeed(1, out);
 		MotorController_SetSpeed(2, out);
 	}
 	//小挺顿一下
-	//MotorController_SetSpeed(1, 0);
-	//MotorController_SetSpeed(2, 0);
-	//Delay_ms(50);
+	// MotorController_SetSpeed(1, 0);
+	// MotorController_SetSpeed(2, 0);
+	// Delay_ms(50);
 }
 
 //转向，输入参数：基准前进速度，转速差，旋转角度  自动转好预设角度，原理和上面pid转向大同小异
@@ -172,14 +178,12 @@ void Turn_I(int nSpeed, int d_speed, int turn_angle)
 		now_angle = now_angle + (dspeed * 0.0001f) / (2 * 3.14159f * car_D) * 360;
 
 		//开始强制修正,旋转角度在预期的2/3以上时，如果检测到线在中心位置，直接推出旋转。
-		uint8_t begin, jump, count[6]; // 最大6个跳变，即3条线
-		uint8_t position;
 		get_AMT1450Data_UART(&begin, &jump, count);
 
 		if (jump == 2)
-			position = 0.5f * (count[0] + count[1]); // position=两次跳变的中间位置
+			line_position = 0.5f * (count[0] + count[1]); // line_position=两次跳变的中间位置
 
-		if (position > 50 && position < 100 && now_angle > turn_angle / 3.0 * 2)
+		if (line_position > 50 && line_position < 100 && now_angle > turn_angle / 3.0 * 2)
 		{
 			break;
 		}
@@ -253,13 +257,11 @@ void Straight_go(int nSpeed) //直走一格后退出
 
 	while (1)
 	{
-		uint8_t begin, jump, count[6]; // 最大6个跳变，即3条线
-		uint8_t position;
 		get_AMT1450Data_UART(&begin, &jump, count); //讲数据存储在三个变量中
 		if (jump == 2)
 		{
 			crossing_flag = 1;
-			position = 0.5f * (count[0] + count[1]); // position=两次跳变的中间位置
+			line_position = 0.5f * (count[0] + count[1]); // position=两次跳变的中间位置
 		}
 		if (jump == 0 && begin == 0 && crossing_flag == 1)
 		{
@@ -269,13 +271,14 @@ void Straight_go(int nSpeed) //直走一格后退出
 			break;
 		}
 
-		int32_t spid_out = Follow_PID(&s_PID, position);
+		int32_t spid_out = Follow_PID(&s_PID, line_position);
 		MotorController_SetSpeed(1, -nSpeed + spid_out);
 		MotorController_SetSpeed(2, nSpeed + spid_out);
 	}
 }
 
-void Straight_go_mm(int nSpeed, int distance) //直走多少毫米，输入速度和目标距离，自动完成走多少毫米。
+//直走多少毫米，输入速度和目标距离，自动完成走多少毫米。
+void Straight_go_mm(int nSpeed, int distance)
 {
 
 	MotorController_SetSpeed(1, nSpeed);
@@ -293,15 +296,12 @@ void Straight_go_mm(int nSpeed, int distance) //直走多少毫米，输入速度和目标距离
 	{
 		Delay_10us(10);
 		dis = dis + (fabs(Motor_speed1 - Motor_speed2) / 2.0f) * 0.0001f; //对线速度积分，就是路程长度。
-		
-		
-		uint8_t begin, jump, count[6]; // 最大6个跳变，即3条线
-		uint8_t position;
+
 		get_AMT1450Data_UART(&begin, &jump, count); //讲数据存储在三个变量中
 		if (jump == 2)
 		{
 			crossing_flag = 1;
-			position = 0.5f * (count[0] + count[1]); // position=两次跳变的中间位置
+			line_position = 0.5f * (count[0] + count[1]); // position=两次跳变的中间位置
 		}
 		if (jump == 0 && begin == 0 && crossing_flag == 1)
 		{
@@ -311,64 +311,33 @@ void Straight_go_mm(int nSpeed, int distance) //直走多少毫米，输入速度和目标距离
 			break;
 		}
 
-		int32_t spid_out = Follow_PID(&s_PID, position);
+		int32_t spid_out = Follow_PID(&s_PID, line_position);
 		MotorController_SetSpeed(1, nSpeed + spid_out);
 		MotorController_SetSpeed(2, -nSpeed + spid_out);
-		
 	}
 }
 
-//与小车自身的方向编码想关，转到东南西北。不用看，还要改的。
+//与小车自身的方向编码想关，转到东南西北。
 void Turn_to_dir(int to_dir) //转到目标角度
 {
-	if (abs(car_direction - to_dir) == 2)
+
+	if (abs(to_dir - car_direction) == 2)
 	{
-		Turn_I(0, 500, 180);
+		TurnBY_PID(180);
 		Car_Direction_change(2);
 	}
 	else
 	{
-		if (car_direction == 1 || car_direction == 4)
+
+		if (to_dir - car_direction == 1 || to_dir - car_direction == -3)
 		{
-			if (car_direction == 1)
-			{
-				if (car_direction + 3 == to_dir)
-				{
-					Turn_I(0, 500, -90);
-					Car_Direction_change(-1);
-				}
-				else
-				{
-					Turn_I(0, 500, 90);
-					Car_Direction_change(1);
-				}
-			}
-			else
-			{
-				if (car_direction - 3 == to_dir)
-				{
-					Turn_I(0, 500, 90);
-					Car_Direction_change(1);
-				}
-				else
-				{
-					Turn_I(0, 500, -90);
-					Car_Direction_change(-1);
-				}
-			}
+			TurnBY_PID(90);
+			Car_Direction_change(1);
 		}
 		else
 		{
-			if (car_direction > to_dir)
-			{
-				Turn_I(0, 500, -90);
-				Car_Direction_change(-1);
-			}
-			else
-			{
-				Turn_I(0, 500, 90);
-				Car_Direction_change(1);
-			}
+			TurnBY_PID(-90);
+			Car_Direction_change(-1);
 		}
 	}
 }
@@ -378,7 +347,7 @@ void Drive_Route(int nSpeed, int tox, int toy)
 {
 	int way[50] = {0};
 
-	//FindPath(way, car_position[0], car_position[1], tox, toy);
+	// FindPath(way, car_position[0], car_position[1], tox, toy);
 
 	for (int i = 1; i < 50 && way[i] != -1; i++)
 	{
@@ -398,3 +367,99 @@ void Drive_Route(int nSpeed, int tox, int toy)
 	MotorController_SetSpeed(2, 0);
 	Delay_ms(300);
 };
+
+//检测是否经过红绿灯
+void Crossing_Detection()
+{
+	// AMT1450循迹模块的使用，见https://www.luheqiu.com/deane/begin-smart_tracking_car/
+
+	get_AMT1450Data_UART(&begin, &jump, count); //讲数据存储在三个变量中
+	if (jump == 2)
+		line_position = 0.5f * (count[0] + count[1]); // position=两次跳变的中间位置，即线的位置
+
+	//如果颜色没有跳变，且最左端为白色，且没进入路口，则
+	if (jump == 0 && begin == 0 && crossing_flag == 1)
+	{
+		map_count++;		 //地图计数加1
+		Car_Position_add(1); //小车位置加1
+		crossing_flag = 0;	 //标志进入路口
+		printf("carPos:%d\n", map_count);
+		// printf("carspeed1%.3f;  carspeed2%.3f\n",Motor_speed1,Motor_speed2);
+	}
+	//如果有线出现，那么代表驶出了路口，标志=1
+	if (jump == 2)
+	{
+		crossing_flag = 1;
+	}
+}
+
+//地图行为，根据目前是在第几个路口，执行相关转向操作
+void Map_Action(int *map_index)
+{
+	int map[][2] = {{4, 7}, {4, 12}, {8, 18}, {2, 20}, {8, 25}, {9, 27}, {3, 29}, {1, 30}, {1, 31}, {6, 32}, {6, 35}, {9, 41}, {1, 43}, {1, 44}, {1, 45}, {3, 49}, {8, 52}, {2, 54}, {2, 55}, {2, 56}, {4, 61}, {4, 64}, {2, 67}, {2, 68}, {3, 69}, {2, 70}, {4, 71}, {9, 77}, {1, 79}, {6, 84}, {6, 89}, {7, 97}};
+
+	if (map_count == map[*map_index][1])
+	{
+		switch (map[*map_index][0])
+		{
+		case 1:
+			Straight_go_mm(500, 120); //走过车身的一半长
+			TurnBY_PID(90);			  // Turn_I(0,300,90);
+			Car_Direction_change(1);  //小车方向转变，1为向左。
+			break;
+		case 2:
+			Straight_go_mm(500, 120); //走过车身的一半长
+			TurnBY_PID(-90);
+			Car_Direction_change(-1);
+			break;
+		case 3:
+			// Straight_go_mm(300, 130); //走过车身的一半长
+			TurnBY_PID(180);
+			Car_Direction_change(2);
+			break;
+		case 4:
+			Turn_I(850, 330, 90); //超大转，路口额外+1，因为会错过一个路口,向左
+			Car_Position_add(1);
+			Car_Direction_change(1);
+			map_count += 2;
+			Car_Position_add(1);
+			break;
+		case 5:
+			TurnBY_PID(180);
+
+			Car_Position_add(1);
+			Car_Direction_change(1);
+			// map_count = 1;
+			//  map_index=-1;
+			break;
+		case 6:
+			Turn_I(870, 375, -90); //超大转，路口额外+1，因为会错过一个路口,向右
+			Car_Position_add(1);
+			Car_Direction_change(1);
+			map_count += 2;
+			Car_Position_add(1);
+			break;
+		case 7: //停车
+			Car_Position_add(1);
+			MotorController_SetSpeed(1, 0); //电机控制
+			MotorController_SetSpeed(2, 0);
+			Delay_ms(10000);
+			break;
+		case 8:
+			Straight_go_mm(600, 350); //右边行进间转向
+			Turn_I(600, 500, -90);
+			Car_Direction_change(-1);
+			map_count += 1;
+			break;
+		case 9:
+			Straight_go_mm(600, 350); //左边行进间转向
+			Turn_I(600, 500, 90);
+			Car_Direction_change(-1);
+			map_count += 1;
+			break;
+		default:
+			break;
+		}
+		*map_index++;
+	}
+}
