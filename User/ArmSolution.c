@@ -5,12 +5,16 @@
 
 
 #define PWM_DUTY_LIMIT 10000 // PWM占空比范围0~10000,代表20ms    250-1250 代表 0-180度
+
 #define L1 120
 #define L2 45
-#define	L3 118
+#define L3 118
 #define L4 35
-#define L5 137 //136
+#define L5 170
 #define L6 22
+#define x1 (0)
+#define y1 0
+#define pi 3.1415926f
 
 uint16_t Slow_pwm1=250;
 uint16_t Slow_pwm2=250;
@@ -120,11 +124,11 @@ void ArmDriver_Init()
 	
 	//初始化一下：
 	TIM9->CCR1=500;
-	TIM9->CCR2=500;
-	TIM5->CCR1=500;
-	TIM5->CCR2=500;
-	TIM5->CCR3=500;
-	TIM5->CCR4=500;
+	TIM9->CCR2=0;
+	TIM5->CCR1=2500;
+	TIM5->CCR2=1500;
+	TIM5->CCR3=700;
+	TIM5->CCR4=750;
 	TIM13->CCR1=500;
 	TIM14->CCR1=500;
 
@@ -136,7 +140,7 @@ void SetServoAngle(int nServo, float angle)
 {
 	if (angle < 0)
 		return;
-	int pwm = angle * 1.0 / 90 / 20 * PWM_DUTY_LIMIT + 250; //解算出对应的pwm波
+	int pwm = angle * 1.0f / 90 / 20 * PWM_DUTY_LIMIT + 250; //解算出对应的pwm波
 	
 	if(pwm>1250)
 		pwm=1250;
@@ -175,52 +179,56 @@ void SetServoAngle(int nServo, float angle)
 }
 void ArmSolution(double x,double y){
 
-	//arm 7 90-120
-	
-	
-	//求解角3
-	//求解角3
-	double t1=2*L5*y+2*L6*x;
-	double t2=2*L5*x-2*L6*y;
+	  float A = sqrt((L5 - L4) * (L5 - L4) + L6 * L6);
+    float B = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));
+    float o4 = acos(1.0f * (B * B + L1 * L1 - A * A) / 2 / B / L1);
 
-	double tsin=1.0*(x*x+y*y+L5*L5+L6*L6-L1*L1)/(sqrt(t1*t1+t2*t2));
-	if(tsin>1 || tsin <-1)
-		return ;
-	double o3=3.1415926-asin(tsin)-atan(t2/t1);
-	if(y==0)
-		return ;
- 	//printf("角3：%.2f	tsin：%.2f	\n",o3,tsin);
-	//求解角1
-	tsin=1.0*(x*x+y*y+L1*L1-L5*L5)/(2*L1*sqrt(x*x+y*y));
-	if(tsin>1 || tsin <-1)
-		return ;
-	double o1=asin(tsin)-atan(x/y);
-	//求解角2
-	t1=L1*cos(o1)-L4*cos(o3);
-	t2=L1*sin(o1)-L4*sin(o3);
-	if(t1*t1+t2*t2<0)
-		return ;
-	tsin=1.0*(t1*t1+t2*t2+L2*L2-L3*L3)/(2*L2*sqrt(t1*t1+t2*t2));
-	if(tsin>1 || tsin <-1)
-		return ;
-	double o2=asin(tsin)-atan(t1/t2);
-	double o4=3.14159-o3;
+    float o5;
+    if (x - x1 == 0)
+        o5 = -pi / 2;
+    else
+        o5 = atan(1.0 * (y - y1) / (x - x1));
+
+    float o1 = pi - o4 + o5;
+    printf("o1=%.2lf %.2lf\n", o1, o1 * 360 / 2 / pi);
+
+    o4 = acos(1.0f * (B * B - L1 * L1 + A * A) / 2 / B / A);
+    float o6 = acos(1.0f * ((L5 - L4) * (L5 - L4) + A * A - L6 * L6) / 2 / A / (L5 - L4));
+
+    o5 = pi / 2 + o5;
+    float o3 = pi - o4 - o5 - o6;
+
+    //printf("o3=%.2lf %.2lf\n", o3, o3 * 360 / 2 / pi);
+
+    float a = x + L5 * sin(o3) + L6 * cos(o3) - x1;
+    float b = y + L5 * cos(o3) - L6 * sin(o3) - y1;
+    float t = 1.0f * (a * a + b * b - L3 * L3 + L2 * L2) / 2 / L2 / sqrt(a * a + b * b);
+    // printf("%.2lf",2*a*L2*2*a*L2+2*b*L2*2*b*L2);
+    float fi = atanf(-1.0 * b / a);
+    if(t>1 || t<-1){
+        return ;
+    }
+    float o2 = asinf(t) - fi;
+    if (o2 < 0)
+        o2 += pi;
+
+    printf("o2=%.2lf %.2lf\n", o2, o2 * 360 / 2 / 3.14159);
 	
-	//如果解有问题就退出
-	if(o3<-3.14*2||o3>3.14*2)
-		return ;
-	
+
+	o4=o3;
+	o3=(3/2*pi-o3);
+		
 	//真实舵机解算
-	o1=o1*360/6.28;
-	o2=o2*360/6.28;
-	o4=o4*360/6.28;
+	o1=o1*180/pi;
+	o2=o2*180/pi;
+	o4=o4*180/pi;
 	
 	
-	o1=o1-24.66;
-	o2=90-o2;
-	o4=90+o4;
+	o1=o1-23.93f-(o1-90)/7;
+	o2=180-o2;
+	//o4=o4+20;
 	
-	//printf("角1：%.2f	角2：%.2f	角3：%.2f	角4：%.2f\n",o1,o2,o3,o4);
+	printf("角1：%.2f	角2：%.2f	角3：%.2f	角4：%.2f\n",o1,o2,o3,o4);
 	
 		
 		SetServoAngle(1, o1);

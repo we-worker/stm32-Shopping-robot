@@ -102,12 +102,13 @@ int main(void)
 					if(height<100){
 						flag=1;
 					}
-				//ArmSolution(-50,height);
+				ArmSolution(-150,-20);
+
 			}
 			Slow_Pwm(1);
 			Slow_Pwm(2);
 			Slow_Pwm(3);
-			Slow_Pwm(4);
+			//Slow_Pwm(4);
 		}
 
 		//Delay_ms(50);

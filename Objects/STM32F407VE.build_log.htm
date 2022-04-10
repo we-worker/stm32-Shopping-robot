@@ -26,58 +26,23 @@ Project File Date:  03/19/2022
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 4 (build 422)', folder: 'C:\works\Keil_v5\ARM\ARMCC\Bin'
-Rebuild target 'STM32F407VE'
-compiling stm32f4xx_it.c...
-compiling system_stm32f4xx.c...
-compiling KeyLed.c...
-compiling delay.c...
+Build target 'STM32F407VE'
 compiling main.c...
-User\ArmSolution.h(7): warning:  #1-D: last line of file ends without a newline
-  void Slow_Pwm(uint8_t nServo);
-User\main.c(117): warning:  #128-D: loop is not reachable
+User\main.c(118): warning:  #128-D: loop is not reachable
   	while (0)
-User\main.c: 2 warnings, 0 errors
-compiling stdout_user.c...
-compiling BTModule.c...
-compiling amt1450_uart.c...
-compiling MotorController.c...
-compiling MotorDriver.c...
-compiling tcrt5000.c...
-assembling startup_stm32f40_41xxx.s...
-compiling PID.c...
-compiling NanoCommunication.c...
-User\ArmSolution.h(7): warning:  #1-D: last line of file ends without a newline
-  void Slow_Pwm(uint8_t nServo);
-User\NanoCommunication.c: 1 warning, 0 errors
-compiling DFS_Map.c...
-compiling ArmSolution.c...
-User\ArmSolution.h(7): warning:  #1-D: last line of file ends without a newline
-  void Slow_Pwm(uint8_t nServo);
-User\ArmSolution.c(139): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  	int pwm = angle * 1.0 / 90 / 20 * PWM_DUTY_LIMIT + 250; //解算出对应的pwm波
-User\ArmSolution.c: 2 warnings, 0 errors
-compiling stm32f4xx_adc.c...
-compiling stm32f4xx_gpio.c...
-compiling stm32f4xx_rcc.c...
-compiling stm32f4xx_usart.c...
-compiling misc.c...
-compiling retarget_io.c...
-compiling stm32f4xx_i2c.c...
-compiling stm32f4xx_dcmi.c...
-compiling stm32f4xx_dma.c...
-compiling stm32f4xx_tim.c...
+User\main.c: 1 warning, 0 errors
 linking...
-Program Size: Code=21542 RO-data=970 RW-data=220 ZI-data=4988  
-".\Objects\STM32F407VE.axf" - 0 Error(s), 5 Warning(s).
+Program Size: Code=25754 RO-data=1150 RW-data=220 ZI-data=4988  
+".\Objects\STM32F407VE.axf" - 0 Error(s), 1 Warning(s).
 
 <h2>Software Packages used:</h2>
 
 Package Vendor: Keil
                 http://www.keil.com/pack/Keil.ARM_Compiler.1.3.0.pack
-                Keil.ARM Compiler::Compiler:I/O:STDOUT:User:1.2.0
+                Keil.ARM Compiler::Compiler:I/O:STDIN:ITM:1.2.0
                 Keil ARM Compiler extensions for ARM Compiler 5 and ARM Compiler 6
-   * Component: STDOUT Variant: User Version: 1.2.0
    * Component: STDIN Variant: ITM Version: 1.2.0
+   * Component: STDOUT Variant: User Version: 1.2.0
    * Component: STDERR Variant: Breakpoint Version: 1.2.0
 
 <h2>Collection of Component include folders:</h2>
@@ -86,18 +51,18 @@ Package Vendor: Keil
 
 <h2>Collection of Component Files used:</h2>
 
-   * Component: Keil.ARM Compiler::Compiler:I/O:STDOUT:User:1.2.0
-      Source file:   Template\stdout_user.c
-      Source file:   Source\retarget_io.c
-      Source file:   Template\stdout_USART.c
-      Source file:   Template\stdout_display.c
-
    * Component: Keil.ARM Compiler::Compiler:I/O:STDIN:ITM:1.2.0
+      Source file:   Source\retarget_io.c
+
+   * Component: Keil.ARM Compiler::Compiler:I/O:STDOUT:User:1.2.0
+      Source file:   Template\stdout_display.c
+      Source file:   Template\stdout_user.c
+      Source file:   Template\stdout_USART.c
       Source file:   Source\retarget_io.c
 
    * Component: Keil.ARM Compiler::Compiler:I/O:STDERR:Breakpoint:1.2.0
       Source file:   Source\retarget_io.c
-Build Time Elapsed:  00:00:04
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
