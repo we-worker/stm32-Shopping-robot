@@ -46,9 +46,9 @@ int main(void)
 	
 	printf("hello\n");
 	
-	while (Key_Released(2) == 0)
-	{
-	} //如果Key1没有按下，则一直等待
+	//while (Key_Released(2) == 0)
+	//{
+	//} //如果Key1没有按下，则一直等待
 
 	Delay_ms(10);
 	AMT1450_UART_Cmd(ENABLE);
@@ -82,9 +82,16 @@ int main(void)
 	printf("hello\n");
 	int t=1;
 	int height =100;int flag=1;
+	//Arm_Grab();
+	SetServoAngle(5, 75);
+	ArmSolution(-120,20);
 	while(1){
 
-		
+		extern int grab_flag;
+		if(grab_flag==1){
+			Arm_Grab();
+		}
+
 		if (b10msFlag == 1)
 		{
 			b10msFlag = 0; //把 10ms 标志位清零
@@ -102,18 +109,15 @@ int main(void)
 					if(height<100){
 						flag=1;
 					}
-				ArmSolution(-150,-20);
+				//ArmSolution(-120,170);
 
 			}
-			Slow_Pwm(1);
-			Slow_Pwm(2);
-			Slow_Pwm(3);
+
 			//Slow_Pwm(4);
 		}
 
-		//Delay_ms(50);
-		//USART1_Process();
-		//printf("hello\n");
+
+
 	}
 	while (0)
 	{

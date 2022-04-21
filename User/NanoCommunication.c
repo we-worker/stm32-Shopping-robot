@@ -5,6 +5,9 @@
 //__IO uint8_t USART_Rx2Buff[FRAME_BYTE_LENGTH]; //接收缓冲区
 //__IO uint8_t USART_FrameFlag = 0; //接收完整数据帧标志，1完整，0不完整
 
+
+
+
 void USART1_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -124,50 +127,96 @@ void USART1_OUT(USART_TypeDef* USARTx, uint8_t *Data,...){
 }
 
 
+uint8_t start_pos_flag=0;
+
 void USART1_Process(void) //处理数据帧
 {
 //	uint8_t i;
 	if(USART_FrameFlag == 1)
 	{
-		printf("get");
+		
+		//printf("get");
 		//将数据原封不动发送回去
-		for(int i=0;i<FRAME_BYTE_LENGTH;i++)
-		{
-			USART_SendData(USART2,USART_Rx2Buff[i]);				
-			while(USART_GetFlagStatus(USART2, USART_FLAG_TC)==RESET);
-		}
+		//for(int i=0;i<FRAME_BYTE_LENGTH;i++)
+		//{
+		//	USART_SendData(USART2,USART_Rx2Buff[i]);				
+		//	while(USART_GetFlagStatus(USART2, USART_FLAG_TC)==RESET);
+		//}
 			
-			if(USART_Rx2Buff[1] == 'L'){
-				arm_angle4+=3;
-				printf("\nL");
-			}
-			if(USART_Rx2Buff[1] == 'R'){
-				arm_angle4-=3;
-				printf("\nR");
-			}
-			SetServoAngle(4,arm_angle4);
+			if(USART_Rx2Buff[1]=='N'&& grab_flag==0){//None没有目标
+				USART_FrameFlag = 0; 
+				return ;
 			
-			/*
-			int height=0;
+			}
+			if( USART_Rx2Buff[1]=='s'&& grab_flag==0){//over所有目标传输完成
+				USART_FrameFlag = 0; 
+				Object_pos_index=0;
+				start_pos_flag=1;//开记录坐标
+				
+				for(int i=0;i<6;i++){
+					Object_pos[i][0]=0;Object_pos[i][1]=0;
+				}
+
+				return ;
+			}
+			if(USART_Rx2Buff[1]=='o'&& grab_flag==0&&start_pos_flag==1){//over所有目标传输完成
+				USART_FrameFlag = 0; 
+				printf("Over!!!");
+				for(int i=0;i<Object_pos_index;i++){
+					printf("目标位置i:(%d,%d)\n",Object_pos[i][0],Object_pos[i][1]);
+				
+				}
+				
+				Object_pos_index=0;
+				grab_flag=1;//开抓
+				start_pos_flag=0;//不记录记录坐标
+				
+				return ;
+			}
+			extern int grab_flag;
+			if(grab_flag==1||start_pos_flag==0){//正在抓取
+				USART_FrameFlag = 0; 
+				return ;
+			}
+			
+
+			
+			int dir=0;
 			int i;
-			for(i=2;i<FRAME_BYTE_LENGTH-1&&USART_Rx2Buff[i]!=0x5A;i++)
+			int arm_height=0;
+			for(i=1;USART_Rx2Buff[i]!=' ';i++)
 			{
-				height=(height*10)+(USART_Rx2Buff[i]-'0');
+				dir=(dir*10)+(USART_Rx2Buff[i]-'0');
 			}
-			*/
-			if(USART_Rx2Buff[2] == 'U'){
-				height-=3;
-				printf("\nU");
+			for(i=i+1;i<FRAME_BYTE_LENGTH-1&&USART_Rx2Buff[i]!=0x5A;i++)
+			{
+				arm_height=(arm_height*10)+(USART_Rx2Buff[i]-'0');
 			}
-			if(USART_Rx2Buff[2] == 'D'){
-				height+=3;
-				printf("\nD");
-			}
-			//height=height-10;//高度有偏移
-			ArmSolution(-80,height);
+			//printf("dir:%d height:%d\n",dir,arm_height);
+
+			float arm_dir=45+1.0*dir/640*90;
+			arm_height=1.0*arm_height/480*250;
+			
+			//强制高度固定
+			if(arm_height>150)
+				arm_height=170;
+			else
+				arm_height=0;
+			
+			extern 	int		Object_pos[6][2];
+			extern uint8_t Object_pos_index;
+			
+			
+			Object_pos[Object_pos_index][0]=arm_dir;
+			Object_pos[Object_pos_index][1]=arm_height;
+			Object_pos_index++;
+
+			
 			
 		//处理完毕，将标志清0
 			USART_FrameFlag = 0; 
+			
+			
 	}
 }
 

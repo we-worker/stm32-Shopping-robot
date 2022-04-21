@@ -3,14 +3,13 @@
 #include "delay.h"
 #include "math.h"
 
-
 #define PWM_DUTY_LIMIT 10000 // PWM占空比范围0~10000,代表20ms    250-1250 代表 0-180度
 
 #define L1 120
-#define L2 45
+#define L2 35
 #define L3 118
 #define L4 35
-#define L5 170
+#define L5 172
 #define L6 22
 #define x1 (0)
 #define y1 0
@@ -20,13 +19,15 @@ uint16_t Slow_pwm1=250;
 uint16_t Slow_pwm2=250;
 uint16_t Slow_pwm3=250;
 uint16_t Slow_pwm4=250;
-uint16_t Slow_pwm5=250;
-uint16_t Slow_pwm6=250;
+uint16_t Slow_pwm5=750;
+uint16_t Slow_pwm6=750;
 uint16_t Slow_pwm7=250;
 uint16_t Slow_pwm8=250;
 
-float arm_angle4=90;
-int height=60;
+int Object_pos[6][2]={0};
+uint8_t Object_pos_index=0;
+
+int arm_height=60;
 
 void ArmDriver_Init()
 {
@@ -125,13 +126,38 @@ void ArmDriver_Init()
 	//初始化一下：
 	TIM9->CCR1=500;
 	TIM9->CCR2=0;
-	TIM5->CCR1=2500;
-	TIM5->CCR2=1500;
-	TIM5->CCR3=700;
+	TIM5->CCR1=500;
+	TIM5->CCR2=800;
+	TIM5->CCR3=750;
 	TIM5->CCR4=750;
 	TIM13->CCR1=500;
 	TIM14->CCR1=500;
-
+	
+	
+	//接下来配置定时器7，实现机械臂缓慢移动
+	RCC_ClocksTypeDef RCC_Clocks;  //RCC时钟结构体
+	NVIC_InitTypeDef NVIC_InitStructure;  //NVIC中断向量结构体
+	
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE); 
+	
+	RCC_GetClocksFreq(&RCC_Clocks);		//获取系统时钟
+	//预分频值的计算方法：系统时钟频率/TIM6计数时钟频率 - 1
+	TIM_TimeBaseStructure.TIM_Prescaler = (uint16_t) (RCC_Clocks.SYSCLK_Frequency / 20000) - 1;  //计数频率10KHz
+	//使TIM6溢出频率的计算方法：TIM6计数时钟频率/（ARR+1），这里的ARR就是TIM_Period的值，设成9，如果TIM6计数时钟频率为10K，则溢出周期为1ms
+	TIM_TimeBaseStructure.TIM_Period =(uint16_t) 50*10 - 1;		//也就是50ms一次
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseInit(TIM7, &TIM_TimeBaseStructure);
+	
+	/* Enable the TIM6 Update Interrupt */
+	NVIC_InitStructure.NVIC_IRQChannel = TIM7_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+	TIM_ClearFlag(TIM7, TIM_FLAG_Update);
+	TIM_ITConfig(TIM7,TIM_IT_Update,ENABLE); //打开溢出中断
+	TIM_Cmd(TIM7,ENABLE);
 }
 
 
@@ -190,7 +216,11 @@ void ArmSolution(double x,double y){
         o5 = atan(1.0 * (y - y1) / (x - x1));
 
     float o1 = pi - o4 + o5;
-    printf("o1=%.2lf %.2lf\n", o1, o1 * 360 / 2 / pi);
+		if(__ARM_isnanf(o1)){
+			printf("解算错误\n");
+			return ;
+		}
+    //printf("o1=%.2lf %.2lf\n", o1, o1 * 360 / 2 / pi);
 
     o4 = acos(1.0f * (B * B - L1 * L1 + A * A) / 2 / B / A);
     float o6 = acos(1.0f * ((L5 - L4) * (L5 - L4) + A * A - L6 * L6) / 2 / A / (L5 - L4));
@@ -206,13 +236,14 @@ void ArmSolution(double x,double y){
     // printf("%.2lf",2*a*L2*2*a*L2+2*b*L2*2*b*L2);
     float fi = atanf(-1.0 * b / a);
     if(t>1 || t<-1){
+			printf("解算错误\n");
         return ;
     }
     float o2 = asinf(t) - fi;
     if (o2 < 0)
         o2 += pi;
 
-    printf("o2=%.2lf %.2lf\n", o2, o2 * 360 / 2 / 3.14159);
+    //printf("o2=%.2lf %.2lf\n", o2, o2 * 360 / 2 / 3.14159f);
 	
 
 	o4=o3;
@@ -228,13 +259,62 @@ void ArmSolution(double x,double y){
 	o2=180-o2;
 	//o4=o4+20;
 	
-	printf("角1：%.2f	角2：%.2f	角3：%.2f	角4：%.2f\n",o1,o2,o3,o4);
+	//printf("角1：%.2f	角2：%.2f	角3：%.2f	角4：%.2f\n",o1,o2,o3,o4);
 	
 		
 		SetServoAngle(1, o1);
 		SetServoAngle(2, o2);
 		SetServoAngle(3, o4);
 }
+
+int grab_flag=0;
+void Arm_Grab()
+{
+	//arm_height=60;
+	//SetServoAngle(6,90);
+	//SetServoAngle(5, 90);
+
+	SetServoAngle(6,Object_pos[Object_pos_index][0]);
+	ArmSolution(-180,Object_pos[Object_pos_index][1]);
+
+	
+	Delay_ms(3000);
+	
+	SetServoAngle(5, 110);
+	
+	Delay_ms(5000);
+	/*
+	ArmSolution(-50,100);
+	SetServoAngle(6,145);
+	Delay_ms(1000);
+	ArmSolution(-180,0);
+	Delay_ms(2000);
+	SetServoAngle(5, 90);
+	Delay_ms(1000);
+		SetServoAngle(6,90);
+	SetServoAngle(5, 90);
+	*/
+		ArmSolution(-120,20);
+		SetServoAngle(6,90);
+		SetServoAngle(5, 75);
+		Delay_ms(3000);
+		
+		
+		
+			//抓取目标队列归0
+	printf("抓取弯一个\n");
+	Object_pos[Object_pos_index][0]=0;
+	Object_pos[Object_pos_index][0]=0;
+	Object_pos_index++;
+	if((Object_pos[Object_pos_index][1]==0&&Object_pos[Object_pos_index][0]==0)||Object_pos_index>=6){
+		grab_flag=0;
+		Object_pos_index=0;
+		printf("大抓取完毕\n");
+	}
+		
+	
+}
+
 
 
 void Slow_Pwm(uint8_t nServo)
@@ -317,5 +397,24 @@ void Slow_Pwm(uint8_t nServo)
 	default:
 		break;
 	}
+}
+
+
+/*以下为中断服务程序，注意不要和stm32f10x_it.c文件中的重复*/
+void TIM7_IRQHandler(void)
+{
+	 //是否有更新中断
+	if(TIM_GetITStatus(TIM7,TIM_IT_Update) != RESET)
+	{
+		 //清除中断标志
+		TIM_ClearITPendingBit(TIM7,TIM_IT_Update); 
+		//处理中断
+		Slow_Pwm(1);
+		Slow_Pwm(2);
+		Slow_Pwm(3);
+		Slow_Pwm(5);
+		Slow_Pwm(6);
+	}
+	
 }
 
