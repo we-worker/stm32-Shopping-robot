@@ -1,21 +1,6 @@
 # 基于 stm32 与 jetson Nano 的机械臂抓取目标方案
 
-<style>
-.container {
-width: 100%;
-background-color: #ddd;
-}
 
-.skills {
-text-align: right;
-padding-right: 20px;
-line-height: 30px;
-color: white;
-}
-
-.bar1 {width: 80%; background-color: #2196F3;}
-.bar2 {width: 70%; background-color: red;}
-</style>
 
 <p>过去时间</p>
 <div class="container">
@@ -37,7 +22,7 @@ color: white;
 - yolo优化
 - 数据发送
 - 开机自启脚本
-- 
+
 ## Stm32
 
 ### 路线设计
