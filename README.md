@@ -2,15 +2,7 @@
 
 
 
-<p>过去时间</p>
-<div class="container">
-<div class="skills bar1">80%</div>
-</div>
 
-<p>完成进度</p>
-<div class="container">
-<div class="skills bar2">70%</div>
-</div>
 
 ## 机械臂
 
