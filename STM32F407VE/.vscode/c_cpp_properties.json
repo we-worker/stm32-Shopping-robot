@@ -3,15 +3,15 @@
         {
             "name": "STM32F407VE",
             "includePath": [
-                "c:\\Users\\Arc\\Documents\\codeProjects\\keil\\STM32F407VE循迹比赛\\Libraries\\CMSIS\\Device\\ST\\STM32F4xx\\Include",
-                "c:\\Users\\Arc\\Documents\\codeProjects\\keil\\STM32F407VE循迹比赛\\Libraries\\STM32F4xx_StdPeriph_Driver\\inc",
-                "c:\\Users\\Arc\\Documents\\codeProjects\\keil\\STM32F407VE循迹比赛\\Libraries\\CMSIS\\Include",
-                "c:\\Users\\Arc\\Documents\\codeProjects\\keil\\STM32F407VE循迹比赛\\User",
-                "c:\\Users\\Arc\\Documents\\codeProjects\\keil\\STM32F407VE循迹比赛\\eMPL",
+                "c:\\Users\\Arc\\Documents\\codeProjects\\Shopping_Robot\\STM32F407VE\\Libraries\\CMSIS\\Device\\ST\\STM32F4xx\\Include",
+                "c:\\Users\\Arc\\Documents\\codeProjects\\Shopping_Robot\\STM32F407VE\\Libraries\\STM32F4xx_StdPeriph_Driver\\inc",
+                "c:\\Users\\Arc\\Documents\\codeProjects\\Shopping_Robot\\STM32F407VE\\Libraries\\CMSIS\\Include",
+                "c:\\Users\\Arc\\Documents\\codeProjects\\Shopping_Robot\\STM32F407VE\\User",
+                "c:\\Users\\Arc\\Documents\\codeProjects\\Shopping_Robot\\STM32F407VE\\eMPL",
                 "C:\\works\\Keil_v5\\ARM\\ARMCC\\include",
                 "C:\\works\\Keil_v5\\ARM\\ARMCC\\include\\rw",
-                "c:\\Users\\Arc\\Documents\\codeProjects\\keil\\STM32F407VE循迹比赛\\Libraries\\CMSIS\\Device\\ST\\STM32F4xx\\Source\\Templates\\arm",
-                "c:\\Users\\Arc\\Documents\\codeProjects\\keil\\STM32F407VE循迹比赛\\Libraries\\STM32F4xx_StdPeriph_Driver\\src"
+                "c:\\Users\\Arc\\Documents\\codeProjects\\Shopping_Robot\\STM32F407VE\\Libraries\\CMSIS\\Device\\ST\\STM32F4xx\\Source\\Templates\\arm",
+                "c:\\Users\\Arc\\Documents\\codeProjects\\Shopping_Robot\\STM32F407VE\\Libraries\\STM32F4xx_StdPeriph_Driver\\src"
             ],
             "defines": [
                 "USE_STDPERIPH_DRIVER",
