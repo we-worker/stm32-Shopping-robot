@@ -4,6 +4,7 @@
 		"pid.h": "c",
 		"motorcontroller.h": "c",
 		"motordriver.h": "c",
-		"nanocommunication.h": "c"
+		"nanocommunication.h": "c",
+		"tcrt5000.h": "c"
 	}
 }

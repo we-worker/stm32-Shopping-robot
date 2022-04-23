@@ -2,32 +2,36 @@
 #include "ArmSolution.h"
 #include "delay.h"
 #include "math.h"
+#include "NanoCommunication.h"
 
 #define PWM_DUTY_LIMIT 10000 // PWM占空比范围0~10000,代表20ms    250-1250 代表 0-180度
 
+//机械臂参数初始化
 #define L1 120
 #define L2 40
 #define L3 118
 #define L4 35
-#define L5 163	
+#define L5 163
 #define L6 22
 #define x1 (0)
 #define y1 0
 #define pi 3.1415926f
 
-uint16_t Slow_pwm1=250;
-uint16_t Slow_pwm2=250;
-uint16_t Slow_pwm3=250;
-uint16_t Slow_pwm4=250;
-uint16_t Slow_pwm5=750;
-uint16_t Slow_pwm6=750;
-uint16_t Slow_pwm7=250;
-uint16_t Slow_pwm8=250;
+//机械臂缓慢移动的目标pwm
+uint16_t Slow_pwm1 = 250;
+uint16_t Slow_pwm2 = 250;
+uint16_t Slow_pwm3 = 250;
+uint16_t Slow_pwm4 = 250;
+uint16_t Slow_pwm5 = 750;
+uint16_t Slow_pwm6 = 750;
+uint16_t Slow_pwm7 = 250;
+uint16_t Slow_pwm8 = 250;
 
-int Object_pos[6][2]={0};
-uint8_t Object_pos_index=0;
+//六个目标位置记录，从上位机发送过来的坐标
+int Object_pos[6][2] = {0};
+uint8_t Object_pos_index = 0; //当前抓取目标
 
-
+/*各个舵机初始化(机械臂)*/
 void ArmDriver_Init()
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -77,8 +81,8 @@ void ArmDriver_Init()
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 
 	TIM_TimeBaseInit(TIM9, &TIM_TimeBaseStructure);
-	
-	TIM_TimeBaseStructure.TIM_Prescaler = 336/2 - 1;
+
+	TIM_TimeBaseStructure.TIM_Prescaler = 336 / 2 - 1;
 	TIM_TimeBaseInit(TIM5, &TIM_TimeBaseStructure);
 	TIM_TimeBaseInit(TIM13, &TIM_TimeBaseStructure);
 	TIM_TimeBaseInit(TIM14, &TIM_TimeBaseStructure);
@@ -121,33 +125,32 @@ void ArmDriver_Init()
 	TIM_Cmd(TIM5, ENABLE);
 	TIM_Cmd(TIM13, ENABLE);
 	TIM_Cmd(TIM14, ENABLE);
-	
+
 	//初始化一下：
-	TIM9->CCR1=500;
-	TIM9->CCR2=0;
-	TIM5->CCR1=500;
-	TIM5->CCR2=750;
-	TIM5->CCR3=750;
-	TIM5->CCR4=750;
-	TIM13->CCR1=500;
-	TIM14->CCR1=500;
-	
-	
+	TIM9->CCR1 = 500;
+	TIM9->CCR2 = 0;
+	TIM5->CCR1 = 500;
+	TIM5->CCR2 = 750;
+	TIM5->CCR3 = 750;
+	TIM5->CCR4 = 750;
+	TIM13->CCR1 = 500;
+	TIM14->CCR1 = 500;
+
 	//接下来配置定时器7，实现机械臂缓慢移动
-	RCC_ClocksTypeDef RCC_Clocks;  //RCC时钟结构体
-	NVIC_InitTypeDef NVIC_InitStructure;  //NVIC中断向量结构体
-	
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE); 
-	
-	RCC_GetClocksFreq(&RCC_Clocks);		//获取系统时钟
+	RCC_ClocksTypeDef RCC_Clocks;		 // RCC时钟结构体
+	NVIC_InitTypeDef NVIC_InitStructure; // NVIC中断向量结构体
+
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);
+
+	RCC_GetClocksFreq(&RCC_Clocks); //获取系统时钟
 	//预分频值的计算方法：系统时钟频率/TIM6计数时钟频率 - 1
-	TIM_TimeBaseStructure.TIM_Prescaler = (uint16_t) (RCC_Clocks.SYSCLK_Frequency / 20000) - 1;  //计数频率10KHz
+	TIM_TimeBaseStructure.TIM_Prescaler = (uint16_t)(RCC_Clocks.SYSCLK_Frequency / 20000) - 1; //计数频率10KHz
 	//使TIM6溢出频率的计算方法：TIM6计数时钟频率/（ARR+1），这里的ARR就是TIM_Period的值，设成9，如果TIM6计数时钟频率为10K，则溢出周期为1ms
-	TIM_TimeBaseStructure.TIM_Period =(uint16_t) 30*10 - 1;		//也就是50ms一次
+	TIM_TimeBaseStructure.TIM_Period = (uint16_t)30 * 10 - 1; //也就是50ms一次
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM7, &TIM_TimeBaseStructure);
-	
+
 	/* Enable the TIM6 Update Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = TIM7_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
@@ -155,274 +158,309 @@ void ArmDriver_Init()
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 	TIM_ClearFlag(TIM7, TIM_FLAG_Update);
-	TIM_ITConfig(TIM7,TIM_IT_Update,ENABLE); //打开溢出中断
-	TIM_Cmd(TIM7,ENABLE);
+	TIM_ITConfig(TIM7, TIM_IT_Update, ENABLE); //打开溢出中断
+	TIM_Cmd(TIM7, ENABLE);
 }
 
-
-
+/**
+ * @description: 设置舵机角度
+ * @param {int} nServo几号舵机
+ * @param {float} angle角度(0-180)
+ * @return {*}
+ */
 void SetServoAngle(int nServo, float angle)
 {
 	if (angle < 0)
 		return;
 	int pwm = angle * 1.0f / 90 / 20 * PWM_DUTY_LIMIT + 250; //解算出对应的pwm波
-	
-	if(pwm>1250)
-		pwm=1250;
-	if(pwm<250)
-		pwm=250;
-	
+
+	if (pwm > 1250)
+		pwm = 1250;
+	if (pwm < 250)
+		pwm = 250;
+
 	switch (nServo)
 	{
 	case 1:
-		Slow_pwm1=pwm;
+		Slow_pwm1 = pwm;
 		break;
 	case 2:
-		Slow_pwm2=pwm;
+		Slow_pwm2 = pwm;
 		break;
 	case 3:
-		Slow_pwm3=pwm;
+		Slow_pwm3 = pwm;
 		break;
 	case 4:
-		Slow_pwm4=pwm;
+		Slow_pwm4 = pwm;
 		break;
 	case 5:
-		Slow_pwm5=pwm;
+		Slow_pwm5 = pwm;
 		break;
 	case 6:
-		Slow_pwm6=pwm;
+		Slow_pwm6 = pwm;
 		break;
 	case 7:
-		Slow_pwm7=pwm;
+		Slow_pwm7 = pwm;
 		break;
 	case 8:
-		Slow_pwm8=pwm;
+		Slow_pwm8 = pwm;
 		break;
 	default:
 		break;
 	}
 }
-void ArmSolution(double x,double y){
 
-	  float A = sqrt((L5 - L4) * (L5 - L4) + L6 * L6);
-    float B = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));
-    float o4 = acos(1.0f * (B * B + L1 * L1 - A * A) / 2 / B / L1);
+/**
+ * @description: ArmSolution 机械臂位置解算
+ * @param {double} x横坐标(-200到50)
+ * @param {double} y纵坐标(-50到250)
+ * @return {*}自动设置好1号2号和3号舵机的角度
+ */
+void ArmSolution(double x, double y)
+{
 
-    float o5;
-    if (x - x1 == 0)
-        o5 = -pi / 2;
-    else
-        o5 = atan(1.0 * (y - y1) / (x - x1));
+	float A = sqrt((L5 - L4) * (L5 - L4) + L6 * L6);
+	float B = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));
+	float o4 = acos(1.0f * (B * B + L1 * L1 - A * A) / 2 / B / L1);
 
-    float o1 = pi - o4 + o5;
-		if(__ARM_isnanf(o1)){
-			printf("解算错误\n");
-			return ;
-		}
-    printf("o1=%.2lf %.2lf\n", o1, o1 * 360 / 2 / pi);
+	float o5;
+	if (x - x1 == 0)
+		o5 = -pi / 2;
+	else
+		o5 = atan(1.0 * (y - y1) / (x - x1));
 
-    o4 = acos(1.0f * (B * B - L1 * L1 + A * A) / 2 / B / A);
-    float o6 = acos(1.0f * ((L5 - L4) * (L5 - L4) + A * A - L6 * L6) / 2 / A / (L5 - L4));
+	float o1 = pi - o4 + o5;
+	if (__ARM_isnanf(o1))
+	{
+		printf("解算错误\n");
+		return;
+	}
+	printf("o1=%.2lf %.2lf\n", o1, o1 * 360 / 2 / pi);
 
-    o5 = pi / 2 + o5;
-    float o3 = pi - o4 - o5 - o6;
+	o4 = acos(1.0f * (B * B - L1 * L1 + A * A) / 2 / B / A);
+	float o6 = acos(1.0f * ((L5 - L4) * (L5 - L4) + A * A - L6 * L6) / 2 / A / (L5 - L4));
 
-    printf("o3=%.2lf %.2lf\n", o3, o3 * 360 / 2 / pi);
+	o5 = pi / 2 + o5;
+	float o3 = pi - o4 - o5 - o6;
 
-    float a = x + L5 * sin(o3) + L6 * cos(o3) - x1;
-    float b = y + L5 * cos(o3) - L6 * sin(o3) - y1;
-    float t = 1.0f * (a * a + b * b - L3 * L3 + L2 * L2) / 2 / L2 / sqrt(a * a + b * b);
-    // printf("%.2lf",2*a*L2*2*a*L2+2*b*L2*2*b*L2);
-    float fi = atanf(-1.0 * b / a);
-    if(t>1 || t<-1){
-			printf("解算错误\n");
-        return ;
-    }
-    float o2 = asinf(t) - fi;
-    if (o2 < 0)
-        o2 += pi;
+	printf("o3=%.2lf %.2lf\n", o3, o3 * 360 / 2 / pi);
 
-    printf("o2=%.2lf %.2lf\n", o2, o2 * 360 / 2 / 3.14159f);
-	
+	float a = x + L5 * sin(o3) + L6 * cos(o3) - x1;
+	float b = y + L5 * cos(o3) - L6 * sin(o3) - y1;
+	float t = 1.0f * (a * a + b * b - L3 * L3 + L2 * L2) / 2 / L2 / sqrt(a * a + b * b);
+	// printf("%.2lf",2*a*L2*2*a*L2+2*b*L2*2*b*L2);
+	float fi = atanf(-1.0 * b / a);
+	if (t > 1 || t < -1)
+	{
+		printf("解算错误\n");
+		return;
+	}
+	float o2 = asinf(t) - fi;
+	if (o2 < 0)
+		o2 += pi;
 
-	o4=o3;
-	o3=(3/2*pi-o3);
-		
+	printf("o2=%.2lf %.2lf\n", o2, o2 * 360 / 2 / 3.14159f);
+
+	o4 = o3;
+	o3 = (3 / 2 * pi - o3);
+
 	//真实舵机解算
-	o1=o1*180/pi;
-	o2=o2*180/pi;
-	o4=o4*180/pi;
-	if(o4>80&&o4<110)
-		o4=o4*210/180.0f;
-	
-	o1=o1-23.93f-(o1-90)/7;
-	o2=180-o2;
-	//o4=o4+20;
-	
-	//printf("角1：%.2f	角2：%.2f	角3：%.2f	角4：%.2f\n",o1,o2,o3,o4);
-	
-		
-		SetServoAngle(1, o1);
-		SetServoAngle(2, o2);
-		SetServoAngle(3, o4);
+	o1 = o1 * 180 / pi;
+	o2 = o2 * 180 / pi;
+	o4 = o4 * 180 / pi;
+	if (o4 > 80 && o4 < 110)
+		o4 = o4 * 210 / 180.0f;
+
+	o1 = o1 - 23.93f - (o1 - 90) / 7;
+	o2 = 180 - o2;
+	// o4=o4+20;
+
+	printf("角1：%.2f	角2：%.2f	角4：%.2f\n", o1, o2, o4);
+
+	SetServoAngle(1, o1);
+	SetServoAngle(2, o2);
+	SetServoAngle(3, o4);
 }
 
-int grab_flag=0;
+/**
+ * @description: 机械臂抓取程序
+ * @param {*}自动根据Object_pos[Object_pos_index]目标位置进行整个抓取
+ * @return {*}
+ */
 void Arm_Grab()
 {
-	//arm_height=60;
-	//SetServoAngle(6,90);
-	//SetServoAngle(5, 90);
-	
-	
-	SetServoAngle(5, 95);//大爪子小一点
-	SetServoAngle(6,Object_pos[Object_pos_index][0]);
-	if(Object_pos[Object_pos_index][1]>=150){//如果是上面的
-		ArmSolution(-40,230);//先举高一点
-		Delay_ms(2000);
-	}
-	//如果是下面的
-	if(Object_pos[Object_pos_index][1]<=50){
-		ArmSolution(-80,60);//先举高一点
-		Delay_ms(2000);
-	}
-	ArmSolution(-190,Object_pos[Object_pos_index][1]);
+	// arm_height=60;
+	// SetServoAngle(6,90);
+	// SetServoAngle(5, 90);
+	extern uint8_t car_flag;
+	if (car_flag == Car_Grab_Normal)
+	{
 
-	
-	Delay_ms(2000);
-	
-	SetServoAngle(5, 110);//抓紧大爪子
-	
-	Delay_ms(1000);				//让我对比一下位置
-	if(Object_pos[Object_pos_index][1]>=150){//如果是上面的
-		ArmSolution(-80,175);//回退一下，以免磕到
-	}else{
-		ArmSolution(-80,60);//回退一下，以免磕到
-	}
-	Delay_ms(1000);
-	
-	ArmSolution(-80,100);	//
-	
-	SetServoAngle(6,145);	//放到背后
-	Delay_ms(1000);
-	ArmSolution(-180,100);	//往前伸一点
-	Delay_ms(3000);
-	SetServoAngle(5, 75);//放手
-	
-		//抓完后初始化
-		SetServoAngle(6,90);
-		ArmSolution(-120,20);//位置回归
+		//六个位置强制固定
+		if (Object_pos[Object_pos_index][1] >= 150)
+			Object_pos[Object_pos_index][1] = 165;
+		else
+			Object_pos[Object_pos_index][1] = -20;
+
+		if (Object_pos[Object_pos_index][0] < 290)
+			Object_pos[Object_pos_index][0] = 16;
+		else if (Object_pos[Object_pos_index][0] < 400)
+			Object_pos[Object_pos_index][0] = 32;
+		else
+			Object_pos[Object_pos_index][0] = 38.5; //向左
+
+		SetServoAngle(5, 95); //大爪子小一点
+		SetServoAngle(6, Object_pos[Object_pos_index][0]);
+		if (Object_pos[Object_pos_index][1] >= 150)
+		{						   //如果是上面的
+			ArmSolution(-40, 230); //先举高一点
+			Delay_ms(2000);
+		}
+		//如果是下面的
+		if (Object_pos[Object_pos_index][1] <= 50)
+		{
+			ArmSolution(-80, 60); //先举高一点
+			Delay_ms(2000);
+		}
+		ArmSolution(-190, Object_pos[Object_pos_index][1]);
+
+		Delay_ms(2000);
+
+		SetServoAngle(5, 110); //抓紧大爪子
+
+		Delay_ms(1000); //让我对比一下位置
+		if (Object_pos[Object_pos_index][1] >= 150)
+		{						   //如果是上面的
+			ArmSolution(-80, 175); //回退一下，以免磕到
+		}
+		else
+		{
+			ArmSolution(-80, 60); //回退一下，以免磕到
+		}
+		Delay_ms(1000);
+
+		ArmSolution(-80, 100); //
+
+		SetServoAngle(6, 145); //放到背后
+		Delay_ms(1000);
+		ArmSolution(-180, 100); //往前伸一点
 		Delay_ms(3000);
-		
-		
-		
-			//抓取目标队列归0
+		SetServoAngle(5, 75); //放手
+
+		//抓完后初始化
+		SetServoAngle(6, 90);
+		ArmSolution(-120, 20); //位置回归
+		Delay_ms(3000);
+
+		//倒车返回函数
+	}
+	else//另一种抓取方式
+	{
+	}
+	//抓取目标队列归0
 	printf("抓取完一个\n");
-	Object_pos[Object_pos_index][0]=0;
-	Object_pos[Object_pos_index][0]=0;
+	Object_pos[Object_pos_index][0] = 0;
+	Object_pos[Object_pos_index][0] = 0;
 	Object_pos_index++;
-	if((Object_pos[Object_pos_index][1]==0&&Object_pos[Object_pos_index][0]==0)||Object_pos_index>=6){
-		grab_flag=0;
-		Object_pos_index=0;
+	if ((Object_pos[Object_pos_index][1] == 0 && Object_pos[Object_pos_index][0] == 0) || Object_pos_index >= 6)
+	{
+		car_flag = Car_Driving; //车子状态制成行驶
+		Object_pos_index = 0;
 		printf("大抓取完毕\n");
 	}
-		
-	
 }
 
-
-
+/*舵机缓慢移动函数，不用看核心要义就是慢慢改变*/
 void Slow_Pwm(uint8_t nServo)
 {
-	int8_t flag=1;
+	int8_t flag = 1;
 	switch (nServo)
 	{
 	case 1:
-		if(TIM9->CCR1>Slow_pwm1)
-			flag=-1;
-		if(TIM9->CCR1==Slow_pwm1)
-			flag=0;
-		if(-flag*TIM9->CCR1+flag*Slow_pwm1>10)
-			flag=10*flag;
-		TIM9->CCR1 =TIM9->CCR1+flag;
+		if (TIM9->CCR1 > Slow_pwm1)
+			flag = -1;
+		if (TIM9->CCR1 == Slow_pwm1)
+			flag = 0;
+		if (-flag * TIM9->CCR1 + flag * Slow_pwm1 > 10)
+			flag = 10 * flag;
+		TIM9->CCR1 = TIM9->CCR1 + flag;
 		break;
 	case 2:
-		if(TIM9->CCR2>Slow_pwm2)
-			flag=-1;
-		if(TIM9->CCR2==Slow_pwm2)
-			flag=0;
-		if(-flag*TIM9->CCR2+flag*Slow_pwm2>10)
-			flag=10*flag;
-		TIM9->CCR2 =TIM9->CCR2+flag;
+		if (TIM9->CCR2 > Slow_pwm2)
+			flag = -1;
+		if (TIM9->CCR2 == Slow_pwm2)
+			flag = 0;
+		if (-flag * TIM9->CCR2 + flag * Slow_pwm2 > 10)
+			flag = 10 * flag;
+		TIM9->CCR2 = TIM9->CCR2 + flag;
 		break;
 	case 3:
-		if(TIM5->CCR1>Slow_pwm3)
-			flag=-1;
-		if(TIM5->CCR1==Slow_pwm3)
-			flag=0;
-		if(-flag*TIM5->CCR1+flag*Slow_pwm3>10)
-			flag=10*flag;
-		TIM5->CCR1=TIM5->CCR1+flag;
+		if (TIM5->CCR1 > Slow_pwm3)
+			flag = -1;
+		if (TIM5->CCR1 == Slow_pwm3)
+			flag = 0;
+		if (-flag * TIM5->CCR1 + flag * Slow_pwm3 > 10)
+			flag = 10 * flag;
+		TIM5->CCR1 = TIM5->CCR1 + flag;
 		break;
 	case 4:
-		if(TIM5->CCR2>Slow_pwm4)
-			flag=-1;
-		if(TIM5->CCR2==Slow_pwm4)
-			flag=0;
-		if(-flag*TIM5->CCR2+flag*Slow_pwm4>10)
-			flag=10*flag;
-		TIM5->CCR2 =TIM5->CCR2+flag;
+		if (TIM5->CCR2 > Slow_pwm4)
+			flag = -1;
+		if (TIM5->CCR2 == Slow_pwm4)
+			flag = 0;
+		if (-flag * TIM5->CCR2 + flag * Slow_pwm4 > 10)
+			flag = 10 * flag;
+		TIM5->CCR2 = TIM5->CCR2 + flag;
 		break;
 	case 5:
-		if(TIM5->CCR3>Slow_pwm5)
-			flag=-1;
-		if(TIM5->CCR3==Slow_pwm5)
-			flag=0;
-		if(-flag*TIM5->CCR3+flag*Slow_pwm5>10)
-			flag=10*flag;
-		TIM5->CCR3 =TIM5->CCR3+flag;
+		if (TIM5->CCR3 > Slow_pwm5)
+			flag = -1;
+		if (TIM5->CCR3 == Slow_pwm5)
+			flag = 0;
+		if (-flag * TIM5->CCR3 + flag * Slow_pwm5 > 10)
+			flag = 10 * flag;
+		TIM5->CCR3 = TIM5->CCR3 + flag;
 		break;
 	case 6:
-		if(TIM5->CCR4>Slow_pwm6)
-			flag=-1;
-		if(TIM5->CCR4==Slow_pwm6)
-			flag=0;
-		if(-flag*TIM5->CCR4+flag*Slow_pwm6>10)
-			flag=10*flag;
-		TIM5->CCR4 =TIM5->CCR4+flag;
+		if (TIM5->CCR4 > Slow_pwm6)
+			flag = -1;
+		if (TIM5->CCR4 == Slow_pwm6)
+			flag = 0;
+		if (-flag * TIM5->CCR4 + flag * Slow_pwm6 > 10)
+			flag = 10 * flag;
+		TIM5->CCR4 = TIM5->CCR4 + flag;
 		break;
 	case 7:
-		if(TIM13->CCR1>Slow_pwm7)
-			flag=-1;
-		if(TIM13->CCR1==Slow_pwm7)
-			flag=0;
-		if(-flag*TIM13->CCR1+flag*Slow_pwm7>10)
-			flag=10*flag;
-		TIM13->CCR1=TIM13->CCR1+flag;
+		if (TIM13->CCR1 > Slow_pwm7)
+			flag = -1;
+		if (TIM13->CCR1 == Slow_pwm7)
+			flag = 0;
+		if (-flag * TIM13->CCR1 + flag * Slow_pwm7 > 10)
+			flag = 10 * flag;
+		TIM13->CCR1 = TIM13->CCR1 + flag;
 		break;
 	case 8:
-		if(TIM14->CCR1>Slow_pwm8)
-			flag=-1;
-		if(TIM14->CCR1==Slow_pwm8)
-			flag=0;
-		if(-flag*TIM14->CCR1+flag*Slow_pwm8>10)
-			flag=10*flag;
-		TIM14->CCR1=TIM14->CCR1+flag;
+		if (TIM14->CCR1 > Slow_pwm8)
+			flag = -1;
+		if (TIM14->CCR1 == Slow_pwm8)
+			flag = 0;
+		if (-flag * TIM14->CCR1 + flag * Slow_pwm8 > 10)
+			flag = 10 * flag;
+		TIM14->CCR1 = TIM14->CCR1 + flag;
 		break;
 	default:
 		break;
 	}
 }
 
-
-/*以下为中断服务程序，注意不要和stm32f10x_it.c文件中的重复*/
+/*以下为机械臂缓慢移动使用的tim7中断*/
 void TIM7_IRQHandler(void)
 {
-	 //是否有更新中断
-	if(TIM_GetITStatus(TIM7,TIM_IT_Update) != RESET)
+	//是否有更新中断
+	if (TIM_GetITStatus(TIM7, TIM_IT_Update) != RESET)
 	{
-		 //清除中断标志
-		TIM_ClearITPendingBit(TIM7,TIM_IT_Update); 
+		//清除中断标志
+		TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
 		//处理中断
 		Slow_Pwm(1);
 		Slow_Pwm(2);
@@ -430,6 +468,4 @@ void TIM7_IRQHandler(void)
 		Slow_Pwm(5);
 		Slow_Pwm(6);
 	}
-	
 }
-

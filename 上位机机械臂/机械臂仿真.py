@@ -1,3 +1,15 @@
+'''
+Author: DarkArc
+Date: 2022-04-22 22:21:46
+LastEditors: DarkArc
+LastEditTime: 2022-04-23 14:14:16
+FilePath: \上位机机械臂\机械臂仿真.py
+Description: 
+
+Copyright (c) 2022 by Darkarc, All Rights Reserved. 
+'''
+
+
 from cProfile import label
 import sys
 from PyQt5.QtWidgets import *

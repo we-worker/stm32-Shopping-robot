@@ -44,3 +44,6 @@
 .\objects\pid.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\pid.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\pid.o: User\tcrt5000.h
+.\objects\pid.o: User\NanoCommunication.h
+.\objects\pid.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\pid.o: User\ArmSolution.h

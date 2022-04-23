@@ -15,16 +15,12 @@
 
 void NVIC_Configuration(void); //中断配置
 void GPIO_Config(void);		   //通用输入输出端口配置
+void System_Clock(void);	   //系统clock韩式
 
 //全局变量
 uint16_t n10msCount;
 uint8_t b100msFlag;
 uint16_t n100msCount;
-
-
-
-
-
 
 //定义预定速度
 int32_t nSpeed;
@@ -32,8 +28,10 @@ int32_t nSpeed;
 //定义与地图行为有关的变量
 extern int car_direction;
 
-extern uint8_t begin, jump, count[6];//循迹模块的相关参数
-extern uint8_t line_position;//直线当前所在的位置
+extern uint8_t begin, jump, count[6]; //循迹模块的相关参数
+extern uint8_t line_position;		  //直线当前所在的位置
+
+extern uint8_t car_flag; //小车运行状态
 
 int main(void)
 {
@@ -48,9 +46,8 @@ int main(void)
 	TCRT5000_config();
 	Delay_ms(100);
 
-	
-	printf("hello\n");
-	
+	printf("Stm32_Waiting\n");
+
 	while (Key_Released(2) == 0)
 	{
 	} //如果Key1没有按下，则一直等待
@@ -59,113 +56,115 @@ int main(void)
 	AMT1450_UART_Cmd(ENABLE);
 
 	//电机相关初始化。
-	
+
 	MotorDriver_Init(1);
 	MotorDriver_Init(2);
 	MotorDriver_Start(1, PWM_DUTY_LIMIT / 2);
 	MotorDriver_Start(2, PWM_DUTY_LIMIT / 2);
-	MotorDriver_Start(3, PWM_DUTY_LIMIT / 2);
-	MotorDriver_Start(4, PWM_DUTY_LIMIT / 2);
+	// MotorDriver_Start(3, PWM_DUTY_LIMIT / 2);
+	// MotorDriver_Start(4, PWM_DUTY_LIMIT / 2);
 	Encoder_Init(2);
 
 	MotorController_Init(13500, 75, 2); //初始化调速器，参数1：轮子转一圈输出的脉冲个数；参数2：轮子直径，单位mm；参数3：几个电机需要调速
 	MotorController_Enable(ENABLE);
 	MotorController_SetAcceleration(10000); //设置加速度值，单位：mm/秒*秒
 	Delay_ms(100);
-	
-	
+
+	//机械臂相关初始化
+	ArmDriver_Init();
+
 	//定义一个循迹pid参数，并初始化。
 	PID s_PID;
 	s_PIDInit(&s_PID);
 
 	nSpeed = 700;
 
-	ArmDriver_Init();
+	printf("Init_Finish\n");
 
-
-	printf("hello\n");
-	int t=1;
-	int height =100;int flag=1;
-	//Arm_Grab();
+	int t = 1;
+	int height = 100;
+	int flag = 1;
+	// Arm_Grab();
 	SetServoAngle(5, 75);
-	ArmSolution(-120,20);
-	
-	
-	while(1){
+	ArmSolution(-120, 20);
+	void Arm_test(int t, int height, int flag);
 
-		extern int grab_flag;
-		if(grab_flag==1){
-			Arm_Grab();
-		}
-
-		if (b10msFlag == 1)
-		{
-			b10msFlag = 0; //把 10ms 标志位清零
-			n10msCount++;
-			// 10ms标志每10个计数等于100ms
-			if (n10msCount % 10 == 0)
-				b100msFlag = 1;
-			
-			t++;
-			if(t%5==0){
-					height=height+1*flag;
-					if(height>=180){
-						flag=-1;
-					}
-					if(height<0){
-						flag=1;
-					}
-				//ArmSolution(-120,100);
-				//SetServoAngle(4, height);
-			}
-
-			//Slow_Pwm(4);
-		}
-
-
-
-	}
-	
-
-	//Straight_back_mm(200,250);
 	while (1)
 	{
 
-		//
-		//不断循环执行的代码块
-		//
+		// Crossing_Detection();
 
-		//Crossing_Detection();
+		// Map_Action(); //地图行为
 
-		//Map_Action(); //地图行为
+		// int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
+		// MotorController_SetSpeed(1, fpid_out+250);				 //电机控制
+		// MotorController_SetSpeed(2, fpid_out-250);
+		//  MotorController_SetSpeed(1, 0); //电机控制
+		//  MotorController_SetSpeed(2, 0);
+		//  Delay_ms(10000);
 
-		//int32_t sp_out = Straight_PID(map_count, map[map_index][1]); //直走，目标距离控制pid
-		//int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
-		//MotorController_SetSpeed(1, fpid_out+250);				 //电机控制
-		//MotorController_SetSpeed(2, fpid_out-250);
-			// MotorController_SetSpeed(1, 0); //电机控制
-			// MotorController_SetSpeed(2, 0);
-			// Delay_ms(10000);
+		Arm_test(t, height, flag);
 
+		if (car_flag == Car_Stop)
+		{
+			MotorController_SetSpeed(1, 0); //电机控制
+			MotorController_SetSpeed(2, 0);
+			Delay_ms(10000);
+		}
 
 		//后面是系统的滴答计时器
-		if (b10msFlag == 1)
-		{
-			b10msFlag = 0; //把 10ms 标志位清零
-			n10msCount++;
-			// 10ms标志每10个计数等于100ms
-			if (n10msCount % 10 == 0)
-				b100msFlag = 1;
+		System_Clock();
+	}
+}
 
-			if (n10msCount == 50) // 500ms时点亮LED
+void Arm_test(int t, int height, int flag)
+{
+	if (car_flag == Car_Grab_Normal || car_flag == Car_Grab_Store)
+	{
+		Arm_Grab();
+	}
+
+	if (b10msFlag == 1)
+	{
+		b10msFlag = 0; //把 10ms 标志位清零
+		n10msCount++;
+		t++;
+		if (t % 5 == 0)
+		{
+			height = height + 1 * flag;
+			if (height >= 180)
 			{
-				LED2_ON();
+				flag = -1;
 			}
-			else if (n10msCount >= 100) // 1000ms时关闭LED，同时计数清零，计算一次速度值
+			if (height < 0)
 			{
-				LED2_OFF();
-				n10msCount = 0;
+				flag = 1;
 			}
+			// ArmSolution(-120,100);
+			// SetServoAngle(4, height);
+		}
+	}
+}
+
+void System_Clock(void)
+{
+	//系统的滴答计时器
+	if (b10msFlag == 1)
+	{
+		b10msFlag = 0; //把 10ms 标志位清零
+		n10msCount++;
+		// 10ms标志每10个计数等于100ms
+		if (n10msCount % 10 == 0)
+			b100msFlag = 1;
+
+		if (n10msCount == 50) // 500ms时点亮LED
+		{
+			LED2_ON();
+		}
+		else if (n10msCount >= 100) // 1000ms时关闭LED，同时计数清零，计算一次速度值
+		{
+			LED2_OFF();
+			n10msCount = 0;
 		}
 	}
 }
@@ -181,7 +180,7 @@ void NVIC_Configuration(void)
 	if (SysTick_Config(SystemCoreClock / 100000))
 	{
 		/* Capture error */
-		
+
 		while (1)
 			;
 	}

@@ -5,7 +5,6 @@ void Arm_Grab(void);
 
 
 
-extern int grab_flag;//抓取标志，因为不知道为什么读取到上位机操作的时候不能直接运行抓取函数
 void Slow_Pwm(uint8_t nServo);
 
 extern int Object_pos[6][2];

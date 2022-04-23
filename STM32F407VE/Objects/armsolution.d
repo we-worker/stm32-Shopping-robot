@@ -37,3 +37,6 @@
 .\objects\armsolution.o: User\ArmSolution.h
 .\objects\armsolution.o: User\delay.h
 .\objects\armsolution.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\objects\armsolution.o: User\NanoCommunication.h
+.\objects\armsolution.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\armsolution.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h

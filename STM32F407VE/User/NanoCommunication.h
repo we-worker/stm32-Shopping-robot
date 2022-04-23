@@ -24,7 +24,20 @@ void USART1_OUT(USART_TypeDef* USARTx, uint8_t *Data,...);
 //void USART_Process(void);
 void USART1_Process(void);
 
-extern uint8_t car_flag;//小车状态
 
+/*car_flag
+ - 1行驶中
+ - 2停顿等待上位机信号
+ - 抓取状态
+    - 一般货架3
+    - 仓库区4
+ - 结束状态5
+*/
+extern uint8_t car_flag;//小车状态，对外操作。
+#define Car_Driving 1
+#define Car_Waiting 2
+#define Car_Grab_Normal 3
+#define Car_Grab_Store 4
+#define Car_Stop 5
 
 #endif

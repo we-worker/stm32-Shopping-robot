@@ -1,11 +1,8 @@
+
 #include "BTModule.h"
 #include "NanoCommunication.h"
 #include "ArmSolution.h"
-//__IO uint8_t nRx2Counter=0; //接收字节数
-//__IO uint8_t USART_Rx2Buff[FRAME_BYTE_LENGTH]; //接收缓冲区
-//__IO uint8_t USART_FrameFlag = 0; //接收完整数据帧标志，1完整，0不完整
 
-//[1行驶中][2购物车连接][3停顿等待上位机信号][4正在抓取][5停放购物车]
 uint8_t car_flag = 0; //小车状态
 
 void USART1_Init(void)
@@ -134,14 +131,21 @@ void USART1_OUT(USART_TypeDef *USARTx, uint8_t *Data, ...)
 	}
 }
 
-
-uint8_t start_pos_flag = 0;
+/**
+ * @description: 上位机发送数据接受部分分为start，over和坐标num num
+ * @param {volatile uint8_t} *USART_Rx2Buff
+ * @return {*}
+ */
+uint8_t start_pos_flag = 0; //开始记录目标坐标的标志位
 void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 {
-	extern int grab_flag;
+	if (USART_Rx2Buff[1] == 'N' && car_flag == Car_Waiting) // None没有目标
+	{
+		return;
+	}
 
-	if (USART_Rx2Buff[1] == 's' && grab_flag == 0)
-	{ // over所有目标传输完成
+	if (USART_Rx2Buff[1] == 's' && car_flag == Car_Waiting && start_pos_flag == 0) //开始记录目标物品坐标
+	{
 		Object_pos_index = 0;
 		start_pos_flag = 1; //开记录坐标
 		printf("start!!!");
@@ -154,8 +158,8 @@ void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 
 		return;
 	}
-	if (USART_Rx2Buff[1] == 'o' && grab_flag == 0 && start_pos_flag == 1)
-	{ // over所有目标传输完成
+	if (USART_Rx2Buff[1] == 'o' && car_flag == Car_Waiting && start_pos_flag == 1) // over所有目标传输完成
+	{
 		printf("Over!!!");
 		for (int i = 0; i < Object_pos_index; i++)
 		{
@@ -163,19 +167,19 @@ void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 		}
 
 		Object_pos_index = 0;
-		grab_flag = 1;		//开抓
-		start_pos_flag = 0; //不记录记录坐标
+		car_flag = Car_Grab_Normal; //需要加一个判断，如果小车在仓库区，就Car_Grab_Store
+		start_pos_flag = 0;			//等待下一次开始记录坐标
 
 		return;
 	}
-	
-	if (grab_flag == 1 || start_pos_flag == 0)
+
+	if (car_flag == Car_Grab_Normal || car_flag == Car_Grab_Store || start_pos_flag == 0)
 	{ //正在抓取
 		return;
 	}
 
 	int dir = 0;
-	int i;
+	uint8_t i;
 	int arm_height = 0;
 	for (i = 1; USART_Rx2Buff[i] != ' '; i++)
 	{
@@ -189,20 +193,9 @@ void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 
 	arm_height = 1.0 * arm_height / 480 * 250;
 
-	//强制高度固定
-	if (arm_height >= 150)
-		arm_height = 165;
-	else
-		arm_height = -20;
-
-	//六种位置左右固定
 	float arm_dir = 65 - 1.0 * dir / 640 * 62;
-	if (dir < 290)
-		arm_dir = 16;
-	else if (dir < 400)
-		arm_dir = 32;
-	else
-		arm_dir = 38.5; //向左
+
+	//存入Object_pos中
 	extern int Object_pos[6][2];
 	extern uint8_t Object_pos_index;
 
@@ -212,25 +205,27 @@ void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 }
 
 //测试函数，发送D1231即朝向某个位置，对准坐标
-void USART1_Process_target_test(volatile uint8_t *USART_Rx2Buff){
-	if (USART_Rx2Buff[1] == 'D' )
-	{ 
+void USART1_Process_target_test(volatile uint8_t *USART_Rx2Buff)
+{
+	if (USART_Rx2Buff[1] == 'D')
+	{
 		uint8_t i;
-		int num=0;
+		int num = 0;
 		for (i = 2; i < FRAME_BYTE_LENGTH - 1 && USART_Rx2Buff[i] != 0x5A; i++)
 		{
 			num = (num * 10) + (USART_Rx2Buff[i] - '0');
 		}
 
-		SetServoAngle(6,num);	//放到背后
-		printf("当前朝向角度:%d\n",num);
+		SetServoAngle(6, num); //放到背后
+		printf("当前朝向角度:%d\n", num);
 		return;
 	}
-	if (USART_Rx2Buff[1] <='9' ||USART_Rx2Buff[1] >='0')
-	{ 
+	if (USART_Rx2Buff[1] <= '9' || USART_Rx2Buff[1] >= '0')
+	{
 		uint8_t i;
-		int numx=0;int numy=0;
-		for (i = 1; i <FRAME_BYTE_LENGTH - 1 &&  USART_Rx2Buff[i] != ' '; i++)
+		int numx = 0;
+		int numy = 0;
+		for (i = 1; i < FRAME_BYTE_LENGTH - 1 && USART_Rx2Buff[i] != ' '; i++)
 		{
 			numx = (numx * 10) + (USART_Rx2Buff[i] - '0');
 		}
@@ -238,14 +233,11 @@ void USART1_Process_target_test(volatile uint8_t *USART_Rx2Buff){
 		{
 			numy = (numy * 10) + (USART_Rx2Buff[i] - '0');
 		}
-		printf("机械臂高低:%d,%d\n",numx,numy);
-		ArmSolution(-numx,numy);
+		printf("机械臂高低:%d,%d\n", numx, numy);
+		ArmSolution(-numx, numy);
 		return;
 	}
-
 }
-
-
 
 void USART1_Process(void) //处理数据帧
 {
@@ -255,17 +247,13 @@ void USART1_Process(void) //处理数据帧
 
 		// printf("get");
 		//将数据原封不动发送回去
-		for(int i=0;i<FRAME_BYTE_LENGTH;i++)
+		for (int i = 0; i < FRAME_BYTE_LENGTH; i++)
 		{
-			USART_SendData(USART2,USART_Rx2Buff[i]);
-			while(USART_GetFlagStatus(USART2, USART_FLAG_TC)==RESET);
+			USART_SendData(USART2, USART_Rx2Buff[i]);
+			while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET)
+				;
 		}
 
-		if (USART_Rx2Buff[1] == 'N' && grab_flag == 0)
-		{ // None没有目标
-			USART_FrameFlag = 0;
-			return;
-		}
 		USART1_Process_target(USART_Rx2Buff);
 		USART1_Process_target_test(USART_Rx2Buff);
 		//处理完毕，将标志清0
@@ -279,7 +267,7 @@ void USART1_Process(void) //处理数据帧
  * @param  None
  * @retval None
  */
-void USART1_IRQHandler(void) //串口2中断服务
+void USART1_IRQHandler(void) //串口1中断服务
 {
 	uint8_t getchar;
 	if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) //判断读寄存器是否为空
