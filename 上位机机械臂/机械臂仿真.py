@@ -162,7 +162,7 @@ class Drawing(QWidget):
 			if(self.bt2.isEnabled()==False):
 				send(self,self.COM.text(),int(self.labeldir.text()),'D')
 		global o1,o2,o3,o4
-		o1,o2,o3,o4=Armsolution2(int(self.slider_1.value()),int(self.labely.text()))
+		o1,o2,o3,o4=Armsolution2(int(self.labelx.text()),int(self.labely.text()))
 		if(self.bt2.isEnabled()==False):
 			sendxy(self,self.COM.text(),int(self.labelx.text()),int(self.labely.text()))
 		self.update()
@@ -189,9 +189,9 @@ class Drawing(QWidget):
 		P1=[300,400]
 		P2=[P1[0]+L1*cos(o1), P1[1]-L1*sin(o1)]
 		P3=[P1[0]+L2*cos(o2), P1[1]-L2*sin(o2)]
-		P4=[P2[0]+L4*cos(o3), P2[1]-L4*sin(o3)]
-		P5=[P4[0]-L6*cos(o3-pi/2), P4[1]+L6*sin(o3-pi/2)]
-		P6=[P5[0]-L5*cos(o3), P5[1]+L5*sin(o3)]
+		P4=[P2[0]-L4*cos(o3), P2[1]+L4*sin(o3)]
+		P5=[P4[0]+L6*cos(o3-pi/2), P4[1]-L6*sin(o3-pi/2)]
+		P6=[P5[0]+L5*cos(o3), P5[1]-L5*sin(o3)]
 
 
 		pen = QPen(Qt.black, 2, Qt.SolidLine)

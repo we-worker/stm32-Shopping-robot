@@ -320,7 +320,7 @@ void Straight_go_mm(int nSpeed, int distance)
 }
 
 //单纯的后退一个格子后退出
-void Straight_back(int nSpeed) //直走一格后退出
+void Straight_back(int nSpeed) 
 {
 	PID s_PID;
 	s_PIDInit(&s_PID);

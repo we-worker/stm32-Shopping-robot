@@ -9,7 +9,7 @@
 #define L2 40
 #define L3 118
 #define L4 35
-#define L5 172	
+#define L5 163	
 #define L6 22
 #define x1 (0)
 #define y1 0
@@ -219,7 +219,7 @@ void ArmSolution(double x,double y){
 			printf("Ω‚À„¥ÌŒÛ\n");
 			return ;
 		}
-    //printf("o1=%.2lf %.2lf\n", o1, o1 * 360 / 2 / pi);
+    printf("o1=%.2lf %.2lf\n", o1, o1 * 360 / 2 / pi);
 
     o4 = acos(1.0f * (B * B - L1 * L1 + A * A) / 2 / B / A);
     float o6 = acos(1.0f * ((L5 - L4) * (L5 - L4) + A * A - L6 * L6) / 2 / A / (L5 - L4));
@@ -227,7 +227,7 @@ void ArmSolution(double x,double y){
     o5 = pi / 2 + o5;
     float o3 = pi - o4 - o5 - o6;
 
-    //printf("o3=%.2lf %.2lf\n", o3, o3 * 360 / 2 / pi);
+    printf("o3=%.2lf %.2lf\n", o3, o3 * 360 / 2 / pi);
 
     float a = x + L5 * sin(o3) + L6 * cos(o3) - x1;
     float b = y + L5 * cos(o3) - L6 * sin(o3) - y1;
@@ -242,7 +242,7 @@ void ArmSolution(double x,double y){
     if (o2 < 0)
         o2 += pi;
 
-    //printf("o2=%.2lf %.2lf\n", o2, o2 * 360 / 2 / 3.14159f);
+    printf("o2=%.2lf %.2lf\n", o2, o2 * 360 / 2 / 3.14159f);
 	
 
 	o4=o3;
