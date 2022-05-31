@@ -113,8 +113,8 @@ void Straight_go(int nSpeed) //直走一格后退出
 		}
 
 		int32_t spid_out = Follow_PID(&s_PID, line_position);
-		MotorController_SetSpeed(1, -nSpeed + spid_out);
-		MotorController_SetSpeed(2, nSpeed + spid_out);
+		MotorController_SetSpeed(2, -nSpeed + spid_out);
+		MotorController_SetSpeed(1, nSpeed + spid_out);
 	}
 }
 
@@ -122,8 +122,8 @@ void Straight_go(int nSpeed) //直走一格后退出
 void Straight_go_mm(int nSpeed, int distance)
 {
 
-	MotorController_SetSpeed(1, nSpeed);
-	MotorController_SetSpeed(2, -nSpeed);
+	MotorController_SetSpeed(2, nSpeed);
+	MotorController_SetSpeed(1, -nSpeed);
 	extern float Motor_speed1;
 	extern float Motor_speed2;
 
@@ -153,8 +153,8 @@ void Straight_go_mm(int nSpeed, int distance)
 		}
 
 		int32_t spid_out = Follow_PID(&s_PID, line_position);
-		MotorController_SetSpeed(1, nSpeed + spid_out);
-		MotorController_SetSpeed(2, -nSpeed + spid_out);
+		MotorController_SetSpeed(2, nSpeed + spid_out);
+		MotorController_SetSpeed(1, -nSpeed + spid_out);
 	}
 }
 
@@ -185,8 +185,8 @@ void Straight_back(int nSpeed)
 			spid_out = 50;
 		crossing_flag = 1;
 		// int32_t spid_out = 0;
-		MotorController_SetSpeed(1, -nSpeed + spid_out);
-		MotorController_SetSpeed(2, nSpeed + spid_out);
+		MotorController_SetSpeed(2, -nSpeed + spid_out);
+		MotorController_SetSpeed(1, nSpeed + spid_out);
 	}
 }
 
@@ -203,13 +203,13 @@ void Straight_back_mm(int nSpeed, int distance) //直走一定距离后退出
 
 		int spid_out = 0;
 		if (TCRT5000_0 == 1)
-			spid_out = -50;
-		if (TCRT5000_2 == 1)
 			spid_out = 50;
+		if (TCRT5000_2 == 1)
+			spid_out = -50;
 		crossing_flag = 1;
 		// int32_t spid_out = 0;
-		MotorController_SetSpeed(1, -nSpeed + spid_out);
-		MotorController_SetSpeed(2, nSpeed + spid_out);
+		MotorController_SetSpeed(2, -nSpeed + spid_out);
+		MotorController_SetSpeed(1, nSpeed + spid_out);
 	}
 	Car_Position_add(1);
 }
@@ -279,8 +279,8 @@ void TurnBY_PID(int turn_angle)
 		else
 			out = out + 50;
 		//电机附速度值
-		MotorController_SetSpeed(1, out);
 		MotorController_SetSpeed(2, out);
+		MotorController_SetSpeed(1, out);
 	}
 	//小挺顿一下
 	// MotorController_SetSpeed(1, 0);
@@ -298,8 +298,8 @@ void Turn_I(int nSpeed, int d_speed, int turn_angle)
 		turn_angle = -turn_angle;
 	}
 
-	MotorController_SetSpeed(1, nSpeed + d_speed);
-	MotorController_SetSpeed(2, -nSpeed + d_speed);
+	MotorController_SetSpeed(2, nSpeed + d_speed);
+	MotorController_SetSpeed(1, -nSpeed + d_speed);
 	extern float Motor_speed1;
 	extern float Motor_speed2;
 
@@ -444,8 +444,10 @@ void Crossing_Detection()
 	// AMT1450循迹模块的使用，见https://www.luheqiu.com/deane/begin-smart_tracking_car/
 
 	get_AMT1450Data_UART(&begin, &jump, count); //讲数据存储在三个变量中
-	if (jump == 2)
+	if (jump == 2){
 		line_position = 0.5f * (count[0] + count[1]); // position=两次跳变的中间位置，即线的位置
+	}
+		
 
 	//如果颜色没有跳变，且最左端为白色，且没进入路口，则
 	if (jump == 0 && begin == 0 && crossing_flag == 1)
@@ -461,6 +463,9 @@ void Crossing_Detection()
 	{
 		crossing_flag = 1;
 	}
+	if(jump==0&&begin==0)
+		line_position=77;//如果在白线，就直走，不要乱调整了
+	
 }
 
 //地图行为，根据目前是在第几个路口，执行相关转向操作
@@ -505,7 +510,7 @@ void Map_Action()
 			Straight_back_mm(200,220);
 			break;	
 		case 8://连接购物车的倒退+抓紧+向前一格
-
+			//todo:连接购物车的相关操作
 			SetServoAngle(7,50);
 			Straight_back_mm(200,220);
 			

@@ -167,6 +167,7 @@ void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 		}
 
 		Object_pos_index = 0;
+		//TODO:需要加一个判断，如果小车在仓库区，就Car_Grab_Store
 		car_flag = Car_Grab_Normal; //需要加一个判断，如果小车在仓库区，就Car_Grab_Store
 		start_pos_flag = 0;			//等待下一次开始记录坐标
 

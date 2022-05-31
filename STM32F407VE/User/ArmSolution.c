@@ -298,16 +298,16 @@ void Arm_Grab()
 
 		//六个位置强制固定
 		if (Object_pos[Object_pos_index][1] >= 150)
-			Object_pos[Object_pos_index][1] = 165;
+			Object_pos[Object_pos_index][1] = 179;
 		else
-			Object_pos[Object_pos_index][1] = -20;
+			Object_pos[Object_pos_index][1] = -1;
 
 		if (Object_pos[Object_pos_index][0] < 290)
 			Object_pos[Object_pos_index][0] = 16;
 		else if (Object_pos[Object_pos_index][0] < 400)
-			Object_pos[Object_pos_index][0] = 32;
+			Object_pos[Object_pos_index][0] = 26;
 		else
-			Object_pos[Object_pos_index][0] = 38.5; //向左
+			Object_pos[Object_pos_index][0] = 37; //向左
 
 		SetServoAngle(5, 95); //大爪子小一点
 		SetServoAngle(6, Object_pos[Object_pos_index][0]);

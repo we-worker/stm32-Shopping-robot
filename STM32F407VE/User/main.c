@@ -50,7 +50,7 @@ int main(void)
 
 	while (Key_Released(2) == 0)
 	{
-	} //如果Key1没有按下，则一直等待
+	} //如果Key1l没有按下，则一直等待
 
 	Delay_ms(10);
 	AMT1450_UART_Cmd(ENABLE);
@@ -89,19 +89,19 @@ int main(void)
 	ArmSolution(-120, 20);
 	void Arm_test(int t, int height, int flag);
 
+
+
 	while (1)
 	{
 
-		// Crossing_Detection();
+		//Crossing_Detection();
 
-		// Map_Action(); //地图行为
+		//Map_Action(); //地图行为
 
-		// int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
-		// MotorController_SetSpeed(1, fpid_out+250);				 //电机控制
-		// MotorController_SetSpeed(2, fpid_out-250);
-		//  MotorController_SetSpeed(1, 0); //电机控制
-		//  MotorController_SetSpeed(2, 0);
-		//  Delay_ms(10000);
+		//int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
+		//MotorController_SetSpeed(2, fpid_out+250);				 //电机控制
+		//MotorController_SetSpeed(1, fpid_out-250);
+
 
 		Arm_test(t, height, flag);
 

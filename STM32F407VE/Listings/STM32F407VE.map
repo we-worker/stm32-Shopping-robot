@@ -1133,7 +1133,7 @@ Removing Unused input sections from the image.
     Removing pid.o(.rrx_text), (6 bytes).
     Removing pid.o(i.Car_Direction_change), (76 bytes).
     Removing pid.o(i.Car_Position_add), (96 bytes).
-    Removing pid.o(i.Crossing_Detection), (164 bytes).
+    Removing pid.o(i.Crossing_Detection), (180 bytes).
     Removing pid.o(i.Drive_Route), (124 bytes).
     Removing pid.o(i.Follow_PID), (170 bytes).
     Removing pid.o(i.Map_Action), (344 bytes).
@@ -1461,7 +1461,7 @@ Removing Unused input sections from the image.
     Removing retarget_io.o(i.stdin_getchar), (16 bytes).
     Removing retarget_io.o(.data), (4 bytes).
 
-372 unused section(s) (total 18053 bytes) removed from the image.
+372 unused section(s) (total 18069 bytes) removed from the image.
 
 ==============================================================================
 
