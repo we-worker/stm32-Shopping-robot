@@ -47,7 +47,7 @@ int main(void)
 	Delay_ms(100);
 
 	printf("Stm32_Waiting\n");
-
+	
 	while (Key_Released(2) == 0)
 	{
 	} //如果Key1l没有按下，则一直等待
@@ -57,6 +57,7 @@ int main(void)
 
 	//电机相关初始化。
 
+	/*
 	MotorDriver_Init(1);
 	MotorDriver_Init(2);
 	MotorDriver_Start(1, PWM_DUTY_LIMIT / 2);
@@ -69,7 +70,7 @@ int main(void)
 	MotorController_Enable(ENABLE);
 	MotorController_SetAcceleration(10000); //设置加速度值，单位：mm/秒*秒
 	Delay_ms(100);
-
+*/
 	//机械臂相关初始化
 	ArmDriver_Init();
 
@@ -88,7 +89,7 @@ int main(void)
 	SetServoAngle(5, 75);
 	ArmSolution(-120, 20);
 	void Arm_test(int t, int height, int flag);
-
+	car_flag=2;
 
 
 	while (1)
@@ -102,16 +103,16 @@ int main(void)
 		//MotorController_SetSpeed(2, fpid_out+250);				 //电机控制
 		//MotorController_SetSpeed(1, fpid_out-250);
 
-
+		
 		Arm_test(t, height, flag);
-
+		/*
 		if (car_flag == Car_Stop)
 		{
 			MotorController_SetSpeed(1, 0); //电机控制
 			MotorController_SetSpeed(2, 0);
 			Delay_ms(10000);
 		}
-
+		*/
 		//后面是系统的滴答计时器
 		System_Clock();
 	}

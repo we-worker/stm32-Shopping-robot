@@ -268,8 +268,8 @@ void ArmSolution(double x, double y)
 	o1 = o1 * 180 / pi;
 	o2 = o2 * 180 / pi;
 	o4 = o4 * 180 / pi;
-	if (o4 > 80 && o4 < 110)
-		o4 = o4 * 210 / 180.0f;
+	//if (o4 > 80 && o4 < 110)
+	//	o4 = o4 * 210 / 180.0f;
 
 	o1 = o1 - 23.93f - (o1 - 90) / 7;
 	o2 = 180 - o2;
@@ -296,33 +296,36 @@ void Arm_Grab()
 	if (car_flag == Car_Grab_Normal)
 	{
 
-		//六个位置强制固定
-		if (Object_pos[Object_pos_index][1] >= 150)
-			Object_pos[Object_pos_index][1] = 179;
-		else
-			Object_pos[Object_pos_index][1] = -1;
+		// //六个位置强制固定
+		// if (Object_pos[Object_pos_index][1] >= 120)
+		// 	Object_pos[Object_pos_index][1] = 158;
+		// else
+		// 	Object_pos[Object_pos_index][1] = -1;
 
-		if (Object_pos[Object_pos_index][0] < 290)
-			Object_pos[Object_pos_index][0] = 16;
-		else if (Object_pos[Object_pos_index][0] < 400)
-			Object_pos[Object_pos_index][0] = 26;
-		else
-			Object_pos[Object_pos_index][0] = 37; //向左
+		// if (Object_pos[Object_pos_index][0] < 290)
+		// 	Object_pos[Object_pos_index][0] = 16;
+		// else if (Object_pos[Object_pos_index][0] < 400)
+		// 	Object_pos[Object_pos_index][0] = 28;
+		// else
+		// 	Object_pos[Object_pos_index][0] = 37; //向左
 
 		SetServoAngle(5, 95); //大爪子小一点
 		SetServoAngle(6, Object_pos[Object_pos_index][0]);
 		if (Object_pos[Object_pos_index][1] >= 150)
 		{						   //如果是上面的
-			ArmSolution(-40, 230); //先举高一点
+			ArmSolution(-40, 213); //先举高一点
 			Delay_ms(2000);
+			ArmSolution(-150, Object_pos[Object_pos_index][1]);
 		}
 		//如果是下面的
 		if (Object_pos[Object_pos_index][1] <= 50)
 		{
 			ArmSolution(-80, 60); //先举高一点
 			Delay_ms(2000);
+			ArmSolution(-200, Object_pos[Object_pos_index][1]);
 		}
-		ArmSolution(-190, Object_pos[Object_pos_index][1]);
+		
+		
 
 		Delay_ms(2000);
 
@@ -331,11 +334,11 @@ void Arm_Grab()
 		Delay_ms(1000); //让我对比一下位置
 		if (Object_pos[Object_pos_index][1] >= 150)
 		{						   //如果是上面的
-			ArmSolution(-80, 175); //回退一下，以免磕到
+			ArmSolution(-70, 175); //回退一下，以免磕到
 		}
 		else
 		{
-			ArmSolution(-80, 60); //回退一下，以免磕到
+			ArmSolution(-70, 60); //回退一下，以免磕到
 		}
 		Delay_ms(1000);
 
@@ -343,7 +346,7 @@ void Arm_Grab()
 
 		SetServoAngle(6, 145); //放到背后
 		Delay_ms(1000);
-		ArmSolution(-180, 100); //往前伸一点
+		ArmSolution(-147, 100); //往前伸一点
 		Delay_ms(3000);
 		SetServoAngle(5, 75); //放手
 
@@ -367,6 +370,7 @@ void Arm_Grab()
 		car_flag = Car_Driving; //车子状态制成行驶
 		Object_pos_index = 0;
 		printf("大抓取完毕\n");
+		car_flag=Car_Waiting;//这里是测试，到时候删掉
 	}
 }
 

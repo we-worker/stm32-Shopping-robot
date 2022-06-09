@@ -150,18 +150,82 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>229</LineNumber>
+          <LineNumber>163</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134233894</Address>
+          <Address>134235138</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>C:\Users\Arc\Documents\codeProjects\keil\STM32F407VE寰抗姣旇禌\User\NanoCommunication.c</Filename>
+          <Filename>.\User\NanoCommunication.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\STM32F407VE\User/NanoCommunication.c\229</Expression>
+          <Expression>\\STM32F407VE\User/NanoCommunication.c\163</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>255</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134227150</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\User\ArmSolution.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\STM32F407VE\User/ArmSolution.c\255</Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>235</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134226054</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\User\ArmSolution.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\STM32F407VE\User/ArmSolution.c\235</Expression>
+        </Bp>
+        <Bp>
+          <Number>3</Number>
+          <Type>0</Type>
+          <LineNumber>151</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134235084</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\User\NanoCommunication.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\STM32F407VE\User/NanoCommunication.c\151</Expression>
+        </Bp>
+        <Bp>
+          <Number>4</Number>
+          <Type>0</Type>
+          <LineNumber>147</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134235052</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\User\NanoCommunication.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\STM32F407VE\User/NanoCommunication.c\147</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -221,6 +285,31 @@
           <count>0</count>
           <WinNumber>2</WinNumber>
           <ItemText>USART_Rx2Buff[1]</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>USART_Rx2Buff</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>numx</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>car_flag</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Object_pos</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>dir</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>

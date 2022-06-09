@@ -192,15 +192,15 @@ void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 	}
 	// printf("dir:%d height:%d\n",dir,arm_height);
 
-	arm_height = 1.0 * arm_height / 480 * 250;
+	//arm_height = 1.0 * arm_height / 480 * 250;
 
-	float arm_dir = 65 - 1.0 * dir / 640 * 62;
+	// float arm_dir = 65 - 1.0 * dir / 640 * 62;
 
 	//存入Object_pos中
 	extern int Object_pos[6][2];
 	extern uint8_t Object_pos_index;
 
-	Object_pos[Object_pos_index][0] = arm_dir;
+	Object_pos[Object_pos_index][0] = dir;
 	Object_pos[Object_pos_index][1] = arm_height;
 	Object_pos_index++;
 }
@@ -256,7 +256,7 @@ void USART1_Process(void) //处理数据帧
 		}
 
 		USART1_Process_target(USART_Rx2Buff);
-		USART1_Process_target_test(USART_Rx2Buff);
+		//USART1_Process_target_test(USART_Rx2Buff);
 		//处理完毕，将标志清0
 		USART_FrameFlag = 0;
 	}
