@@ -192,7 +192,7 @@ void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 	}
 	// printf("dir:%d height:%d\n",dir,arm_height);
 
-	//arm_height = 1.0 * arm_height / 480 * 250;
+	//arm_height = 1.0 * arm_height / 480 * 300-80;//相机坐标和机械臂坐标的转换
 
 	// float arm_dir = 65 - 1.0 * dir / 640 * 62;
 
@@ -224,16 +224,22 @@ void USART1_Process_target_test(volatile uint8_t *USART_Rx2Buff)
 	if (USART_Rx2Buff[1] <= '9' || USART_Rx2Buff[1] >= '0')
 	{
 		uint8_t i;
+		int8_t fuhao_flag=1;
 		int numx = 0;
 		int numy = 0;
 		for (i = 1; i < FRAME_BYTE_LENGTH - 1 && USART_Rx2Buff[i] != ' '; i++)
 		{
 			numx = (numx * 10) + (USART_Rx2Buff[i] - '0');
 		}
+		if(USART_Rx2Buff[i+1]=='-'){
+			i+=1;
+			fuhao_flag=-1;
+		}
 		for (i = i + 1; i < FRAME_BYTE_LENGTH - 1 && USART_Rx2Buff[i] != 0x5A; i++)
 		{
 			numy = (numy * 10) + (USART_Rx2Buff[i] - '0');
 		}
+		numy=numy*fuhao_flag;
 		printf("机械臂高低:%d,%d\n", numx, numy);
 		ArmSolution(-numx, numy);
 		return;
@@ -255,8 +261,8 @@ void USART1_Process(void) //处理数据帧
 				;
 		}
 
-		USART1_Process_target(USART_Rx2Buff);
-		//USART1_Process_target_test(USART_Rx2Buff);
+		//USART1_Process_target(USART_Rx2Buff);
+		USART1_Process_target_test(USART_Rx2Buff);
 		//处理完毕，将标志清0
 		USART_FrameFlag = 0;
 	}

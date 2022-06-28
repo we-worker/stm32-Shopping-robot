@@ -48,9 +48,9 @@ int main(void)
 
 	printf("Stm32_Waiting\n");
 	
-	while (Key_Released(2) == 0)
-	{
-	} //如果Key1l没有按下，则一直等待
+	//while (Key_Released(2) == 0)
+	//{
+	//} //如果Key1l没有按下，则一直等待
 
 	Delay_ms(10);
 	AMT1450_UART_Cmd(ENABLE);

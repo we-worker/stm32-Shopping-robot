@@ -5,6 +5,8 @@
 		"motorcontroller.h": "c",
 		"motordriver.h": "c",
 		"nanocommunication.h": "c",
-		"tcrt5000.h": "c"
+		"tcrt5000.h": "c",
+		"algorithm": "c",
+		"c8051f020.h": "c"
 	}
 }

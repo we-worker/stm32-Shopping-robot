@@ -80,7 +80,7 @@ class Drawing(QWidget):
 		self.slider_1.valueChanged.connect(lambda: self.on_change_func(self.slider_1))     # 3
  
 		self.slider_2 = QSlider(Qt.Horizontal, self)
-		self.slider_2.setMinimum(-50)                                                        # 4
+		self.slider_2.setMinimum(-100)                                                        # 4
 		self.slider_2.setMaximum(300)                                                      # 5
 		self.slider_2.valueChanged.connect(lambda: self.on_change_func(self.slider_2))
 

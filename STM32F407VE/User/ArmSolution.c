@@ -268,11 +268,11 @@ void ArmSolution(double x, double y)
 	o1 = o1 * 180 / pi;
 	o2 = o2 * 180 / pi;
 	o4 = o4 * 180 / pi;
-	//if (o4 > 80 && o4 < 110)
-	//	o4 = o4 * 210 / 180.0f;
+	if (o4 < 35)
+		o4 =35;
 
 	o1 = o1 - 23.93f - (o1 - 90) / 7;
-	o2 = 180 - o2;
+	o2 = 180 - o2+45;
 	// o4=o4+20;
 
 	printf("角1：%.2f	角2：%.2f	角4：%.2f\n", o1, o2, o4);
@@ -296,33 +296,33 @@ void Arm_Grab()
 	if (car_flag == Car_Grab_Normal)
 	{
 
-		// //六个位置强制固定
-		// if (Object_pos[Object_pos_index][1] >= 120)
-		// 	Object_pos[Object_pos_index][1] = 158;
-		// else
-		// 	Object_pos[Object_pos_index][1] = -1;
+		//六个位置强制固定
+		if (Object_pos[Object_pos_index][1] >= 120)
+			Object_pos[Object_pos_index][1] = 135;
+		else
+			Object_pos[Object_pos_index][1] = -32;
 
-		// if (Object_pos[Object_pos_index][0] < 290)
-		// 	Object_pos[Object_pos_index][0] = 16;
-		// else if (Object_pos[Object_pos_index][0] < 400)
-		// 	Object_pos[Object_pos_index][0] = 28;
-		// else
-		// 	Object_pos[Object_pos_index][0] = 37; //向左
+		if (Object_pos[Object_pos_index][0] < 290)
+			Object_pos[Object_pos_index][0] = 16;
+		else if (Object_pos[Object_pos_index][0] < 400)
+			Object_pos[Object_pos_index][0] = 28;
+		else
+			Object_pos[Object_pos_index][0] = 37; //向左
 
 		SetServoAngle(5, 95); //大爪子小一点
 		SetServoAngle(6, Object_pos[Object_pos_index][0]);
 		if (Object_pos[Object_pos_index][1] >= 150)
 		{						   //如果是上面的
-			ArmSolution(-40, 213); //先举高一点
+			ArmSolution(-120, 177); //先举高一点
 			Delay_ms(2000);
-			ArmSolution(-150, Object_pos[Object_pos_index][1]);
+			ArmSolution(-161, Object_pos[Object_pos_index][1]);
 		}
 		//如果是下面的
 		if (Object_pos[Object_pos_index][1] <= 50)
 		{
-			ArmSolution(-80, 60); //先举高一点
+			ArmSolution(-100, 50); //先举高一点
 			Delay_ms(2000);
-			ArmSolution(-200, Object_pos[Object_pos_index][1]);
+			ArmSolution(-176, Object_pos[Object_pos_index][1]);
 		}
 		
 		
@@ -349,7 +349,7 @@ void Arm_Grab()
 		ArmSolution(-147, 100); //往前伸一点
 		Delay_ms(3000);
 		SetServoAngle(5, 75); //放手
-
+		Delay_ms(1000);
 		//抓完后初始化
 		SetServoAngle(6, 90);
 		ArmSolution(-120, 20); //位置回归
