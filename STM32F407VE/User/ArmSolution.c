@@ -297,48 +297,48 @@ void Arm_Grab()
 	{
 
 		//六个位置强制固定
-		if (Object_pos[Object_pos_index][1] >= 120)
+		if (Object_pos[Object_pos_index][1] >= 40)
 			Object_pos[Object_pos_index][1] = 135;
 		else
 			Object_pos[Object_pos_index][1] = -32;
 
 		if (Object_pos[Object_pos_index][0] < 290)
-			Object_pos[Object_pos_index][0] = 16;
+			Object_pos[Object_pos_index][0] = 19;
 		else if (Object_pos[Object_pos_index][0] < 400)
-			Object_pos[Object_pos_index][0] = 28;
+			Object_pos[Object_pos_index][0] = 29;
 		else
 			Object_pos[Object_pos_index][0] = 37; //向左
 
-		SetServoAngle(5, 95); //大爪子小一点
+		SetServoAngle(5, 100); //大爪子小一点
 		SetServoAngle(6, Object_pos[Object_pos_index][0]);
-		if (Object_pos[Object_pos_index][1] >= 150)
+		if (Object_pos[Object_pos_index][1] >= 135)
 		{						   //如果是上面的
-			ArmSolution(-120, 177); //先举高一点
+			ArmSolution(-80, 190); //先举高一点
 			Delay_ms(2000);
-			ArmSolution(-161, Object_pos[Object_pos_index][1]);
+			ArmSolution(-210, Object_pos[Object_pos_index][1]);
 		}
 		//如果是下面的
-		if (Object_pos[Object_pos_index][1] <= 50)
+		if (Object_pos[Object_pos_index][1] <= 0)
 		{
 			ArmSolution(-100, 50); //先举高一点
 			Delay_ms(2000);
-			ArmSolution(-176, Object_pos[Object_pos_index][1]);
+			ArmSolution(-200, Object_pos[Object_pos_index][1]);//-171
 		}
 		
 		
 
 		Delay_ms(2000);
 
-		SetServoAngle(5, 110); //抓紧大爪子
+		SetServoAngle(5, 115); //抓紧大爪子
 
-		Delay_ms(1000); //让我对比一下位置
-		if (Object_pos[Object_pos_index][1] >= 150)
+		Delay_ms(2000); //让我对比一下位置
+		if (Object_pos[Object_pos_index][1] >= 135)
 		{						   //如果是上面的
-			ArmSolution(-70, 175); //回退一下，以免磕到
+			ArmSolution(-70, 140); //回退一下，以免磕到
 		}
 		else
 		{
-			ArmSolution(-70, 60); //回退一下，以免磕到
+			ArmSolution(-100, -10); //回退一下，以免磕到
 		}
 		Delay_ms(1000);
 
@@ -346,7 +346,7 @@ void Arm_Grab()
 
 		SetServoAngle(6, 145); //放到背后
 		Delay_ms(1000);
-		ArmSolution(-147, 100); //往前伸一点
+		ArmSolution(-147, 75); //往前伸一点
 		Delay_ms(3000);
 		SetServoAngle(5, 75); //放手
 		Delay_ms(1000);

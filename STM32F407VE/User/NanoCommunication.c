@@ -192,7 +192,7 @@ void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 	}
 	// printf("dir:%d height:%d\n",dir,arm_height);
 
-	//arm_height = 1.0 * arm_height / 480 * 300-80;//相机坐标和机械臂坐标的转换
+	arm_height = 1.0 * arm_height / 480 * 300-80;//相机坐标和机械臂坐标的转换
 
 	// float arm_dir = 65 - 1.0 * dir / 640 * 62;
 
@@ -261,8 +261,8 @@ void USART1_Process(void) //处理数据帧
 				;
 		}
 
-		//USART1_Process_target(USART_Rx2Buff);
-		USART1_Process_target_test(USART_Rx2Buff);
+		USART1_Process_target(USART_Rx2Buff);
+		//USART1_Process_target_test(USART_Rx2Buff);
 		//处理完毕，将标志清0
 		USART_FrameFlag = 0;
 	}
