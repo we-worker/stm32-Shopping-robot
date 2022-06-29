@@ -7,6 +7,13 @@
 		"nanocommunication.h": "c",
 		"tcrt5000.h": "c",
 		"algorithm": "c",
-		"c8051f020.h": "c"
+		"c8051f020.h": "c",
+		"amt1450_uart.h": "c",
+		"keyled.h": "c",
+		"delay.h": "c",
+		"misc.h": "c",
+		"btmodule.h": "c",
+		"dfs_map.h": "c",
+		"armsolution.h": "c"
 	}
 }

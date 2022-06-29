@@ -40,6 +40,7 @@ void Straight_go_mm(int nSpeed, int distance); //直走多少距离。
 void TurnBY_PID(int turn_angle);			   //使用pid转向
 void Straight_back(int nSpeed);//单纯的倒退一格
 void Straight_back_mm(int nSpeed, int distance); //直走一定距离后退出
+void Straight_go(int nSpeed);//单纯的走一格后退出
 
 
 int32_t Straight_PID(int nowPos, int targetPos);

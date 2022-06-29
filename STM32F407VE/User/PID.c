@@ -113,8 +113,8 @@ void Straight_go(int nSpeed) //直走一格后退出
 		}
 
 		int32_t spid_out = Follow_PID(&s_PID, line_position);
-		MotorController_SetSpeed(2, -nSpeed + spid_out);
-		MotorController_SetSpeed(1, nSpeed + spid_out);
+		MotorController_SetSpeed(1, -nSpeed + spid_out);
+		MotorController_SetSpeed(2, nSpeed + spid_out);
 	}
 }
 
@@ -261,7 +261,7 @@ void TurnBY_PID(int turn_angle)
 		if (jump == 2)
 			line_position = 0.5f * (count[0] + count[1]); // line_position=两次跳变的中间位置，即是线的位置
 
-		if (line_position > 60 && line_position < 85 && now_angle > turn_angle / 3.0 * 2) //如果线在中心位置并且旋转角度在预期的2/3以上时，直接退出
+		if (line_position > 70 && line_position < 80 && now_angle > turn_angle / 3.0 * 2) //如果线在中心位置并且旋转角度在预期的2/3以上时，直接退出
 		{
 			break;
 		}

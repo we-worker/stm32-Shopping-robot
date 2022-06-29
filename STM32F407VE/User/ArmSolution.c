@@ -235,7 +235,7 @@ void ArmSolution(double x, double y)
 		printf("解算错误\n");
 		return;
 	}
-	printf("o1=%.2lf %.2lf\n", o1, o1 * 360 / 2 / pi);
+	//printf("o1=%.2lf %.2lf\n", o1, o1 * 360 / 2 / pi);
 
 	o4 = acos(1.0f * (B * B - L1 * L1 + A * A) / 2 / B / A);
 	float o6 = acos(1.0f * ((L5 - L4) * (L5 - L4) + A * A - L6 * L6) / 2 / A / (L5 - L4));
@@ -243,7 +243,7 @@ void ArmSolution(double x, double y)
 	o5 = pi / 2 + o5;
 	float o3 = pi - o4 - o5 - o6;
 
-	printf("o3=%.2lf %.2lf\n", o3, o3 * 360 / 2 / pi);
+	//printf("o3=%.2lf %.2lf\n", o3, o3 * 360 / 2 / pi);
 
 	float a = x + L5 * sin(o3) + L6 * cos(o3) - x1;
 	float b = y + L5 * cos(o3) - L6 * sin(o3) - y1;
@@ -259,7 +259,7 @@ void ArmSolution(double x, double y)
 	if (o2 < 0)
 		o2 += pi;
 
-	printf("o2=%.2lf %.2lf\n", o2, o2 * 360 / 2 / 3.14159f);
+	//printf("o2=%.2lf %.2lf\n", o2, o2 * 360 / 2 / 3.14159f);
 
 	o4 = o3;
 	o3 = (3 / 2 * pi - o3);
@@ -275,7 +275,7 @@ void ArmSolution(double x, double y)
 	o2 = 180 - o2+45;
 	// o4=o4+20;
 
-	printf("角1：%.2f	角2：%.2f	角4：%.2f\n", o1, o2, o4);
+	//printf("角1：%.2f	角2：%.2f	角4：%.2f\n", o1, o2, o4);
 
 	SetServoAngle(1, o1);
 	SetServoAngle(2, o2);
@@ -293,27 +293,39 @@ void Arm_Grab()
 	// SetServoAngle(6,90);
 	// SetServoAngle(5, 90);
 	extern uint8_t car_flag;
+	char target_pos[]="U_L";
 	if (car_flag == Car_Grab_Normal)
 	{
 
 		//六个位置强制固定
-		if (Object_pos[Object_pos_index][1] >= 40)
+		if (Object_pos[Object_pos_index][1] >= 40){
 			Object_pos[Object_pos_index][1] = 135;
-		else
+			target_pos[0]='U';
+		}
+		else{
 			Object_pos[Object_pos_index][1] = -32;
+			target_pos[0]='D';
+		}
 
-		if (Object_pos[Object_pos_index][0] < 290)
+		if (Object_pos[Object_pos_index][0] < 200	){
+			target_pos[2]='R';
 			Object_pos[Object_pos_index][0] = 19;
-		else if (Object_pos[Object_pos_index][0] < 400)
+		}
+		else if (Object_pos[Object_pos_index][0] < 350){
+			target_pos[2]='M';
 			Object_pos[Object_pos_index][0] = 29;
-		else
-			Object_pos[Object_pos_index][0] = 37; //向左
+		}
+		else{
+			target_pos[2]='L';
+			Object_pos[Object_pos_index][0] = 38; //向左
+		}
+		printf("%s\n",target_pos);
 
 		SetServoAngle(5, 100); //大爪子小一点
 		SetServoAngle(6, Object_pos[Object_pos_index][0]);
 		if (Object_pos[Object_pos_index][1] >= 135)
 		{						   //如果是上面的
-			ArmSolution(-80, 190); //先举高一点
+			ArmSolution(-40, 210); //先举高一点
 			Delay_ms(2000);
 			ArmSolution(-210, Object_pos[Object_pos_index][1]);
 		}
@@ -329,16 +341,16 @@ void Arm_Grab()
 
 		Delay_ms(2000);
 
-		SetServoAngle(5, 115); //抓紧大爪子
+		SetServoAngle(5, 120); //抓紧大爪子
 
-		Delay_ms(2000); //让我对比一下位置
+		Delay_ms(1000); //让我对比一下位置
 		if (Object_pos[Object_pos_index][1] >= 135)
 		{						   //如果是上面的
 			ArmSolution(-70, 140); //回退一下，以免磕到
 		}
 		else
 		{
-			ArmSolution(-100, -10); //回退一下，以免磕到
+			ArmSolution(-110, 0); //回退一下，以免磕到
 		}
 		Delay_ms(1000);
 

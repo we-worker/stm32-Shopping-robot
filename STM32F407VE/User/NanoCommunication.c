@@ -168,6 +168,7 @@ void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 
 		Object_pos_index = 0;
 		//TODO:需要加一个判断，如果小车在仓库区，就Car_Grab_Store
+		//TODO:解决一下，第一个坐标错误的情况88
 		car_flag = Car_Grab_Normal; //需要加一个判断，如果小车在仓库区，就Car_Grab_Store
 		start_pos_flag = 0;			//等待下一次开始记录坐标
 
@@ -254,12 +255,12 @@ void USART1_Process(void) //处理数据帧
 
 		// printf("get");
 		//将数据原封不动发送回去
-		for (int i = 0; i < FRAME_BYTE_LENGTH; i++)
-		{
-			USART_SendData(USART2, USART_Rx2Buff[i]);
-			while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET)
-				;
-		}
+		//for (int i = 0; i < FRAME_BYTE_LENGTH; i++)
+		//{
+		//	USART_SendData(USART2, USART_Rx2Buff[i]);
+		//	while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET)
+		//		;
+		//}
 
 		USART1_Process_target(USART_Rx2Buff);
 		//USART1_Process_target_test(USART_Rx2Buff);
