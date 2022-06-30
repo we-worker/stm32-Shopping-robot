@@ -163,9 +163,11 @@ void get_runto_Grab()
 			Delay_ms(1000);
 		}
 		Arm_Grab();
-		if(car_flag!=Car_Grab_Normal){//如果抓取结束后，车辆状态不对，就是抓取结束，需要退出
+		if(Object_pos_index==0){//如果抓取结束后，抓取位置还是0，就是抓取结束，需要退出
 			Straight_back_mm(200,280);
 			TurnBY_PID(-90);
+			car_flag = Car_Driving; //车子状态制成行驶
+			car_flag=Car_Waiting;//这里是测试，到时候删掉
 			MotorController_SetSpeed(1,0);
 			MotorController_SetSpeed(2,0);
 			Delay_ms(10000);

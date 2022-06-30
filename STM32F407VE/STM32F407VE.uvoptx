@@ -150,66 +150,18 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>317</LineNumber>
+          <LineNumber>147</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134227808</Address>
+          <Address>134232628</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\User\ArmSolution.c</Filename>
+          <Filename>.\User\NanoCommunication.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\STM32F407VE\User/ArmSolution.c\317</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>324</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134227884</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\User\ArmSolution.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\STM32F407VE\User/ArmSolution.c\324</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>332</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134227936</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\User\ArmSolution.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\STM32F407VE\User/ArmSolution.c\332</Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
-          <LineNumber>312</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134227742</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\User\ArmSolution.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\STM32F407VE\User/ArmSolution.c\312</Expression>
+          <Expression>\\STM32F407VE\User/NanoCommunication.c\147</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
