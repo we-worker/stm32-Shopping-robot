@@ -97,13 +97,13 @@ int main(void)
 	while (1)
 	{
 
-		//Crossing_Detection();
+		Crossing_Detection();
 
-		//Map_Action(); //地图行为
+		Map_Action(); //地图行为
 
-		//int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
-		//MotorController_SetSpeed(2, fpid_out+250);				 //电机控制
-		//MotorController_SetSpeed(1, fpid_out-250);
+		int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
+		MotorController_SetSpeed(2, fpid_out+250);				 //电机控制
+		MotorController_SetSpeed(1, fpid_out-250);
 
 		
 		//Arm_test(t, height, flag);

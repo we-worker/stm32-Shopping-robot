@@ -484,5 +484,6 @@ void TIM7_IRQHandler(void)
 		Slow_Pwm(3);
 		Slow_Pwm(5);
 		Slow_Pwm(6);
+		Slow_Pwm(8);
 	}
 }
