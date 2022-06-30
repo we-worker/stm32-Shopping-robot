@@ -1,7 +1,7 @@
 .\objects\main.o: User\main.c
 .\objects\main.o: .\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\objects\main.o: .\Libraries\CMSIS\Include\core_cm4.h
-.\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\main.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\main.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\main.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\main.o: .\Libraries\CMSIS\Include\core_cmSimd.h
@@ -42,8 +42,8 @@
 .\objects\main.o: User\tcrt5000.h
 .\objects\main.o: User\PID.h
 .\objects\main.o: User\BTModule.h
-.\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\main.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\main.o: D:\keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\main.o: D:\keil\ARM\ARMCC\Bin\..\include\stdarg.h
 .\objects\main.o: User\DFS_Map.h
 .\objects\main.o: User\NanoCommunication.h
 .\objects\main.o: User\ArmSolution.h

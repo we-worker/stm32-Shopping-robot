@@ -472,8 +472,8 @@ void Crossing_Detection()
 void Map_Action()
 {
 	extern uint8_t car_flag;
-	// int map[][2] = {{1, 2}, {1, 4},{7, 5}};
-	int map[][2] = {{1, 8}, {1, 13}, {2, 19}, {2, 20}, {2, 26}, {1, 28}, {3, 29}, {1, 30}, {1, 31}, {2, 33}, {2, 36}, {1, 42}, {1, 43}, {1, 44}, {1, 45}, {3, 49}, {2, 53}, {2, 54}, {2, 55}, {2, 56}, {1, 62}, {1, 65}, {2, 67}, {2, 68}, {3, 69}, {2, 70}, {1, 72}, {1, 78}, {1, 79}, {2, 85}, {2, 90}, {7, 97}};
+	int map[][2] = {{2, 2},{10, 3}};
+//	int map[][2] = {{1, 8}, {1, 13}, {2, 19}, {2, 20}, {2, 26}, {1, 28}, {3, 29}, {1, 30}, {1, 31}, {2, 33}, {2, 36}, {1, 42}, {1, 43}, {1, 44}, {1, 45}, {3, 49}, {2, 53}, {2, 54}, {2, 55}, {2, 56}, {1, 62}, {1, 65}, {2, 67}, {2, 68}, {3, 69}, {2, 70}, {1, 72}, {1, 78}, {1, 79}, {2, 85}, {2, 90}, {7, 97}};
 
 	if (map_count == map[map_index][1])
 	{
@@ -511,10 +511,10 @@ void Map_Action()
 			break;	
 		case 8://连接购物车的倒退+抓紧+向前一格
 			//todo:连接购物车的相关操作
-			SetServoAngle(7,50);
+			SetServoAngle(8,90);
 			Straight_back_mm(200,220);
 			
-			SetServoAngle(7,90);
+			SetServoAngle(8,150);
 			Delay_ms(1000);
 
 			Straight_go(200);
@@ -522,16 +522,33 @@ void Map_Action()
 
 			break;	
 		case 9://放好购物车的倒退+放爪+向前一格
-			SetServoAngle(7,90);
+			SetServoAngle(8,90);
 			Straight_back_mm(200,220);
 			
-			SetServoAngle(7,50);
+			SetServoAngle(8,150);
 			Delay_ms(1000);
 			
 			Straight_go(200);
 			Straight_go_mm(200, 120); //走过车身的一半长
 
-			break;	
+			break;
+		case 10://左转+延时1s+倒退1格
+			Straight_go_mm(200, 120); //走过车身的一半长
+			TurnBY_PID(90);			  // Turn_I(0,300,90);
+			Car_Direction_change(1);  //小车方向转变，1为向左。
+		
+			SetServoAngle(8,90);
+			Straight_back_mm(200,350);
+			Straight_back_mm(50,60);
+			SetServoAngle(8,160);
+			Straight_back_mm(50,40);
+		
+			Straight_go(220);
+			Straight_go_mm(200, 120); //走过车身的一半长
+		    break;
+		
+		
+          			
 		
 		default:
 			break;

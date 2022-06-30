@@ -2,7 +2,7 @@
 .\objects\nanocommunication.o: User\BTModule.h
 .\objects\nanocommunication.o: .\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\objects\nanocommunication.o: .\Libraries\CMSIS\Include\core_cm4.h
-.\objects\nanocommunication.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\nanocommunication.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\nanocommunication.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\nanocommunication.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\nanocommunication.o: .\Libraries\CMSIS\Include\core_cmSimd.h
@@ -35,7 +35,7 @@
 .\objects\nanocommunication.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dac.h
 .\objects\nanocommunication.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dcmi.h
 .\objects\nanocommunication.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_fsmc.h
-.\objects\nanocommunication.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\nanocommunication.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\nanocommunication.o: D:\keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\nanocommunication.o: D:\keil\ARM\ARMCC\Bin\..\include\stdarg.h
 .\objects\nanocommunication.o: User\NanoCommunication.h
 .\objects\nanocommunication.o: User\ArmSolution.h

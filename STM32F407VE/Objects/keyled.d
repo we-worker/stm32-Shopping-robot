@@ -2,7 +2,7 @@
 .\objects\keyled.o: User\KeyLed.h
 .\objects\keyled.o: .\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\objects\keyled.o: .\Libraries\CMSIS\Include\core_cm4.h
-.\objects\keyled.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\keyled.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\keyled.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\keyled.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\keyled.o: .\Libraries\CMSIS\Include\core_cmSimd.h

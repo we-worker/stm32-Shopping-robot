@@ -1,9 +1,9 @@
 .\objects\dfs_map.o: User\DFS_Map.c
-.\objects\dfs_map.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\dfs_map.o: D:\keil\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\dfs_map.o: User\DFS_Map.h
 .\objects\dfs_map.o: .\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\objects\dfs_map.o: .\Libraries\CMSIS\Include\core_cm4.h
-.\objects\dfs_map.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\dfs_map.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\dfs_map.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\dfs_map.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\dfs_map.o: .\Libraries\CMSIS\Include\core_cmSimd.h

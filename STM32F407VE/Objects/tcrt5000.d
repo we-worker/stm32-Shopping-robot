@@ -2,7 +2,7 @@
 .\objects\tcrt5000.o: User\tcrt5000.h
 .\objects\tcrt5000.o: .\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\objects\tcrt5000.o: .\Libraries\CMSIS\Include\core_cm4.h
-.\objects\tcrt5000.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\tcrt5000.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\tcrt5000.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\tcrt5000.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\tcrt5000.o: .\Libraries\CMSIS\Include\core_cmSimd.h

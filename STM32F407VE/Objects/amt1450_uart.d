@@ -2,7 +2,7 @@
 .\objects\amt1450_uart.o: User\amt1450_uart.h
 .\objects\amt1450_uart.o: .\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\objects\amt1450_uart.o: .\Libraries\CMSIS\Include\core_cm4.h
-.\objects\amt1450_uart.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\amt1450_uart.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\amt1450_uart.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\amt1450_uart.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\amt1450_uart.o: .\Libraries\CMSIS\Include\core_cmSimd.h
@@ -36,6 +36,6 @@
 .\objects\amt1450_uart.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dcmi.h
 .\objects\amt1450_uart.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_fsmc.h
 .\objects\amt1450_uart.o: User\BTModule.h
-.\objects\amt1450_uart.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\amt1450_uart.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\amt1450_uart.o: D:\keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\amt1450_uart.o: D:\keil\ARM\ARMCC\Bin\..\include\stdarg.h
 .\objects\amt1450_uart.o: User\delay.h

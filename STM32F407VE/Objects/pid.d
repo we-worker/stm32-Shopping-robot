@@ -2,7 +2,7 @@
 .\objects\pid.o: User\PID.h
 .\objects\pid.o: .\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\objects\pid.o: .\Libraries\CMSIS\Include\core_cm4.h
-.\objects\pid.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\pid.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\pid.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\pid.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\pid.o: .\Libraries\CMSIS\Include\core_cmSimd.h
@@ -40,10 +40,10 @@
 .\objects\pid.o: User\amt1450_uart.h
 .\objects\pid.o: User\MotorDriver.h
 .\objects\pid.o: User\AStarRoute.h
-.\objects\pid.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
-.\objects\pid.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\pid.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\pid.o: D:\keil\ARM\ARMCC\Bin\..\include\math.h
+.\objects\pid.o: D:\keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\pid.o: D:\keil\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\pid.o: User\tcrt5000.h
 .\objects\pid.o: User\NanoCommunication.h
-.\objects\pid.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\pid.o: D:\keil\ARM\ARMCC\Bin\..\include\stdarg.h
 .\objects\pid.o: User\ArmSolution.h

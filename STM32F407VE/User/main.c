@@ -92,18 +92,17 @@ int main(void)
 	ArmSolution(-120, 20);
 	void Arm_test(int t, int height, int flag);
 	car_flag=2;
-
-
+	
+	height=0;
 	while (1)
 	{
+		Crossing_Detection();
 
-		//Crossing_Detection();
+		Map_Action(); //地图行为
 
-		//Map_Action(); //地图行为
-
-		//int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
-		//MotorController_SetSpeed(2, fpid_out+250);				 //电机控制
-		//MotorController_SetSpeed(1, fpid_out-250);
+		int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
+		MotorController_SetSpeed(2, fpid_out+250);				 //电机控制
+		MotorController_SetSpeed(1, fpid_out-250);
 
 		
 		//Arm_test(t, height, flag);
@@ -163,11 +162,9 @@ void get_runto_Grab()
 			Delay_ms(1000);
 		}
 		Arm_Grab();
-		if(Object_pos_index==0){//如果抓取结束后，抓取位置还是0，就是抓取结束，需要退出
+		if(car_flag!=Car_Grab_Normal){//如果抓取结束后，车辆状态不对，就是抓取结束，需要退出
 			Straight_back_mm(200,280);
 			TurnBY_PID(-90);
-			car_flag = Car_Driving; //车子状态制成行驶
-			car_flag=Car_Waiting;//这里是测试，到时候删掉
 			MotorController_SetSpeed(1,0);
 			MotorController_SetSpeed(2,0);
 			Delay_ms(10000);

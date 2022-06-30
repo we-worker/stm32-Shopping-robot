@@ -2,7 +2,7 @@
 .\objects\btmodule.o: User\BTModule.h
 .\objects\btmodule.o: .\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\objects\btmodule.o: .\Libraries\CMSIS\Include\core_cm4.h
-.\objects\btmodule.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\btmodule.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\btmodule.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\btmodule.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\btmodule.o: .\Libraries\CMSIS\Include\core_cmSimd.h
@@ -35,6 +35,6 @@
 .\objects\btmodule.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dac.h
 .\objects\btmodule.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_dcmi.h
 .\objects\btmodule.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_fsmc.h
-.\objects\btmodule.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\btmodule.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\btmodule.o: D:\keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\btmodule.o: D:\keil\ARM\ARMCC\Bin\..\include\stdarg.h
 .\objects\btmodule.o: User\MotorController.h

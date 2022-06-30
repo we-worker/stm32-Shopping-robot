@@ -2,7 +2,7 @@
 .\objects\delay.o: User\delay.h
 .\objects\delay.o: .\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\objects\delay.o: .\Libraries\CMSIS\Include\core_cm4.h
-.\objects\delay.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\delay.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\delay.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\delay.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\delay.o: .\Libraries\CMSIS\Include\core_cmSimd.h

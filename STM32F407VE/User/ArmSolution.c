@@ -311,7 +311,7 @@ void Arm_Grab()
 			target_pos[2]='R';
 			Object_pos[Object_pos_index][0] = 19;
 		}
-		else if (Object_pos[Object_pos_index][0] < 320){
+		else if (Object_pos[Object_pos_index][0] < 350){
 			target_pos[2]='M';
 			Object_pos[Object_pos_index][0] = 29;
 		}
@@ -367,7 +367,7 @@ void Arm_Grab()
 		ArmSolution(-120, 20); //位置回归
 		Delay_ms(3000);
 
-		
+		//倒车返回函数
 	}
 	else//另一种抓取方式
 	{
@@ -379,11 +379,10 @@ void Arm_Grab()
 	Object_pos_index++;
 	if ((Object_pos[Object_pos_index][1] == 0 && Object_pos[Object_pos_index][0] == 0) || Object_pos_index >= 6)
 	{
-
+		car_flag = Car_Driving; //车子状态制成行驶
 		Object_pos_index = 0;
 		printf("大抓取完毕\n");
-		//倒车返回函数
-		
+		car_flag=Car_Waiting;//这里是测试，到时候删掉
 	}
 }
 
@@ -484,5 +483,6 @@ void TIM7_IRQHandler(void)
 		Slow_Pwm(3);
 		Slow_Pwm(5);
 		Slow_Pwm(6);
+		Slow_Pwm(8);
 	}
 }

@@ -1,7 +1,7 @@
 .\objects\armsolution.o: User\ArmSolution.c
 .\objects\armsolution.o: .\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\objects\armsolution.o: .\Libraries\CMSIS\Include\core_cm4.h
-.\objects\armsolution.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\armsolution.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\armsolution.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\armsolution.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\armsolution.o: .\Libraries\CMSIS\Include\core_cmSimd.h
@@ -36,7 +36,7 @@
 .\objects\armsolution.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_fsmc.h
 .\objects\armsolution.o: User\ArmSolution.h
 .\objects\armsolution.o: User\delay.h
-.\objects\armsolution.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\objects\armsolution.o: D:\keil\ARM\ARMCC\Bin\..\include\math.h
 .\objects\armsolution.o: User\NanoCommunication.h
-.\objects\armsolution.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\armsolution.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\armsolution.o: D:\keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\armsolution.o: D:\keil\ARM\ARMCC\Bin\..\include\stdarg.h

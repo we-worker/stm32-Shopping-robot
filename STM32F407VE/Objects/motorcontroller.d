@@ -2,7 +2,7 @@
 .\objects\motorcontroller.o: User\MotorController.h
 .\objects\motorcontroller.o: .\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\objects\motorcontroller.o: .\Libraries\CMSIS\Include\core_cm4.h
-.\objects\motorcontroller.o: C:\works\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\motorcontroller.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\motorcontroller.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\motorcontroller.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\motorcontroller.o: .\Libraries\CMSIS\Include\core_cmSimd.h
