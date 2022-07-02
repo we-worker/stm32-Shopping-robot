@@ -20,7 +20,7 @@ int car_position[2] = {9, 8};
 //检测中间白线的位置相关参数
 uint8_t begin, jump, count[6];
 uint8_t line_position;
-
+uint8_t force_move=3;//同一个位置连续抓取3次就强制移动
 #define car_D 320 //小车直径定义
 
 //========================================以下为pid参数初始化函数===================
@@ -246,7 +246,7 @@ void TurnBY_PID(int turn_angle)
 		flag_left = 0;
 		turn_angle = -turn_angle;
 	}
-
+	SetServoAngle(8,125);//爪子先松开//为了能够让购物车过弯
 	while (now_angle < turn_angle)
 	{
 		//根据dt，积分积出但前的角度，原理不用太明白。
@@ -282,6 +282,7 @@ void TurnBY_PID(int turn_angle)
 		MotorController_SetSpeed(2, out);
 		MotorController_SetSpeed(1, out);
 	}
+	SetServoAngle(8,150);//爪子再抓紧
 	//小挺顿一下
 	// MotorController_SetSpeed(1, 0);
 	// MotorController_SetSpeed(2, 0);
@@ -468,11 +469,12 @@ void Crossing_Detection()
 	
 }
 
+
 //地图行为，根据目前是在第几个路口，执行相关转向操作
 void Map_Action()
 {
 	extern uint8_t car_flag;
-	int map[][2] = {{2, 2},{10, 3}};
+	int map[][2] = {{2, 2},{10, 3},{1,4},{6,7},{6,8},{6,9},{6,10},{6,11},{6,12},{8,12},{6,15},{6,16},{6,17},{6,18},{6,19},{6,20},{8,20}};
 	//int map[][2] = {{1, 8}, {1, 13}, {2, 19}, {2, 20}, {2, 26}, {1, 28}, {3, 29}, {1, 30}, {1, 31}, {2, 33}, {2, 36}, {1, 42}, {1, 43}, {1, 44}, {1, 45}, {3, 49}, {2, 53}, {2, 54}, {2, 55}, {2, 56}, {1, 62}, {1, 65}, {2, 67}, {2, 68}, {3, 69}, {2, 70}, {1, 72}, {1, 78}, {1, 79}, {2, 85}, {2, 90}, {7, 97}};
 
 	if (map_count == map[map_index][1])
@@ -501,31 +503,29 @@ void Map_Action()
 			Straight_go(200);
 			Straight_go_mm(200, 120); //走过车身的一半长
 			break;	
-		case 6://直走一格后等待上位机信号
-			Straight_go(200);
+		case 6://等待上位机信号
 			Straight_go_mm(200, 120); //走过车身的一半长
+			MotorController_SetSpeed(1, 0);
+			MotorController_SetSpeed(2, 0);
+			Delay_ms(2000);
 			car_flag=Car_Waiting;
+			printf("wait_nano\n");
 			break;	
 		case 7://倒退一格
-			Straight_back_mm(200,220);
+			Straight_back_mm(200,480);
 			break;	
-		case 8://连接购物车的倒退+抓紧+向前一格
-			//todo:连接购物车的相关操作
-			SetServoAngle(8,90);
-			Straight_back_mm(200,220);
-			
-			SetServoAngle(8,150);
-			Delay_ms(1000);
+		case 8://转角处后退+右转
+			Straight_back_mm(200,420);
 
-			Straight_go(200);
-			Straight_go_mm(200, 120); //走过车身的一半长
+			TurnBY_PID(-90);
+			Car_Direction_change(-1);
 
 			break;	
 		case 9://放好购物车的倒退+放爪+向前一格
-			SetServoAngle(8,90);
-			Straight_back_mm(200,220);
+			TurnBY_PID(-180);			  // Turn_I(0,300,90)
+			Straight_back_mm(200,320);
 			
-			SetServoAngle(8,150);
+			SetServoAngle(8,0);
 			Delay_ms(1000);
 			
 			Straight_go(200);
@@ -538,13 +538,12 @@ void Map_Action()
 			Car_Direction_change(1);  //小车方向转变，1为向左。
 
 			SetServoAngle(8,90);
-			Straight_back_mm(200,350);
-			Straight_back_mm(50,60);
+			Straight_back_mm(200,230);
 			SetServoAngle(8,160);
 			Straight_back_mm(50,40);
 
 			Straight_go(220);
-			Straight_go_mm(200, 120); //走过车身的一半长
+			//Straight_go_mm(200, 120); //走过车身的一半长
 		    break;
 		default:
 			break;

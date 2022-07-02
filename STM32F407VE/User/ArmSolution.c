@@ -311,7 +311,7 @@ void Arm_Grab()
 			target_pos[2]='R';
 			Object_pos[Object_pos_index][0] = 19;
 		}
-		else if (Object_pos[Object_pos_index][0] < 320){
+		else if (Object_pos[Object_pos_index][0] < 260){
 			target_pos[2]='M';
 			Object_pos[Object_pos_index][0] = 29;
 		}
@@ -325,7 +325,7 @@ void Arm_Grab()
 		SetServoAngle(6, Object_pos[Object_pos_index][0]);
 		if (Object_pos[Object_pos_index][1] >= 135)
 		{						   //如果是上面的
-			ArmSolution(-40, 210); //先举高一点
+			ArmSolution(-30, 210); //先举高一点
 			Delay_ms(2000);
 			ArmSolution(-210, Object_pos[Object_pos_index][1]);
 		}
@@ -339,7 +339,7 @@ void Arm_Grab()
 		
 		
 
-		Delay_ms(2000);
+		Delay_ms(1000);
 
 		SetServoAngle(5, 120); //抓紧大爪子
 
@@ -359,13 +359,13 @@ void Arm_Grab()
 		SetServoAngle(6, 145); //放到背后
 		Delay_ms(1000);
 		ArmSolution(-147, 75); //往前伸一点
-		Delay_ms(3000);
+		Delay_ms(1000);
 		SetServoAngle(5, 75); //放手
 		Delay_ms(1000);
 		//抓完后初始化
-		SetServoAngle(6, 90);
+		SetServoAngle(6, 85);
 		ArmSolution(-120, 20); //位置回归
-		Delay_ms(3000);
+		Delay_ms(1500);
 
 		
 	}

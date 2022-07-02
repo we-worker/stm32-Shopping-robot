@@ -139,8 +139,12 @@ void USART1_OUT(USART_TypeDef *USARTx, uint8_t *Data, ...)
 uint8_t start_pos_flag = 0; //开始记录目标坐标的标志位
 void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 {
+	if(car_flag == Car_Driving){
+		return;
+	}
 	if (USART_Rx2Buff[1] == 'N' && car_flag == Car_Waiting) // None没有目标
 	{
+		car_flag= Car_Driving;
 		return;
 	}
 
@@ -168,7 +172,6 @@ void USART1_Process_target(volatile uint8_t *USART_Rx2Buff)
 
 		Object_pos_index = 0;
 		//TODO:需要加一个判断，如果小车在仓库区，就Car_Grab_Store
-		//TODO:解决一下，第一个坐标错误的情况88
 		car_flag = Car_Grab_Normal; //需要加一个判断，如果小车在仓库区，就Car_Grab_Store
 		start_pos_flag = 0;			//等待下一次开始记录坐标
 

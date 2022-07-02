@@ -90,22 +90,26 @@ int main(void)
 	// Arm_Grab();
 	SetServoAngle(5, 75);
 	ArmSolution(-120, 20);
+	SetServoAngle(6, 85); //位置回归
 	void Arm_test(int t, int height, int flag);
 	car_flag=2;
-
-
+	
+	car_flag=Car_Driving;
 	while (1)
 	{
-
-		Crossing_Detection();
-
-		Map_Action(); //地图行为
-
-		int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
-		MotorController_SetSpeed(2, fpid_out+250);				 //电机控制
-		MotorController_SetSpeed(1, fpid_out-250);
-
+		//TODO:10s启动
 		
+
+		if(car_flag==Car_Driving){
+			Crossing_Detection();
+			Map_Action(); //地图行为
+		}
+		if(car_flag==Car_Driving){
+			int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
+			MotorController_SetSpeed(2, fpid_out+250);				 //电机控制
+			MotorController_SetSpeed(1, fpid_out-250);
+		}
+	
 		//Arm_test(t, height, flag);
 		get_runto_Grab();
 		
@@ -161,39 +165,20 @@ void get_runto_Grab()
 			MotorController_SetSpeed(1,0);
 			MotorController_SetSpeed(2,0);
 			Delay_ms(1000);
+			//map_count--;//进入的时候会多记一个位置
 		}
 		Arm_Grab();
 		if(Object_pos_index==0){//如果抓取结束后，抓取位置还是0，就是抓取结束，需要退出
 			Straight_back_mm(200,280);
 			TurnBY_PID(-90);
-			car_flag = Car_Driving; //车子状态制成行驶
-			car_flag=Car_Waiting;//这里是测试，到时候删掉
+			// car_flag=Car_Waiting;//这里是测试，到时候删掉
 			MotorController_SetSpeed(1,0);
 			MotorController_SetSpeed(2,0);
-			Delay_ms(10000);
+			Delay_ms(1000);
+			car_flag = Car_Driving; //车子状态制成行驶
 		}
 	}
 
-	// if (b10msFlag == 1)
-	// {
-	// 	b10msFlag = 0; //把 10ms 标志位清零
-	// 	n10msCount++;
-	// 	t++;
-	// 	if (t % 5 == 0)
-	// 	{
-	// 		height = height + 1 * flag;
-	// 		if (height >= 180)
-	// 		{
-	// 			flag = -1;
-	// 		}
-	// 		if (height < 0)
-	// 		{
-	// 			flag = 1;
-	// 		}
-	// 		// ArmSolution(-120,100);
-	// 		// SetServoAngle(4, height);
-	// 	}
-	// }
 }
 
 void System_Clock(void)
