@@ -300,24 +300,24 @@ void Arm_Grab()
 		//六个位置强制固定
 		if (Object_pos[Object_pos_index][1] >= 40){
 			Object_pos[Object_pos_index][1] = 135;
-			target_pos[0]='U';
+			target_pos[0]='U';//上
 		}
 		else{
 			Object_pos[Object_pos_index][1] = -32;
-			target_pos[0]='D';
+			target_pos[0]='D';//下
 		}
-
-		if (Object_pos[Object_pos_index][0] < 200	){
-			target_pos[2]='R';
+//原本是200,300,40
+		if (Object_pos[Object_pos_index][0] < 235	){
+			target_pos[2]='R';//右
 			Object_pos[Object_pos_index][0] = 19;
 		}
-		else if (Object_pos[Object_pos_index][0] < 260){
-			target_pos[2]='M';
+		else if (Object_pos[Object_pos_index][0] < 350){
+			target_pos[2]='M';//中
 			Object_pos[Object_pos_index][0] = 29;
 		}
 		else{
-			target_pos[2]='L';
-			Object_pos[Object_pos_index][0] = 38; //向左
+			target_pos[2]='L';//左
+			Object_pos[Object_pos_index][0] = 40; //向左
 		}
 		printf("%s\n",target_pos);
 
@@ -363,7 +363,8 @@ void Arm_Grab()
 		SetServoAngle(5, 75); //放手
 		Delay_ms(1000);
 		//抓完后初始化
-		SetServoAngle(6, 85);
+		//SetServoAngle(6, 85);
+		SetServoAngle(6, 29);
 		ArmSolution(-120, 20); //位置回归
 		Delay_ms(1500);
 

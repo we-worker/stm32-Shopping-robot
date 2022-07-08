@@ -246,7 +246,7 @@ void TurnBY_PID(int turn_angle)
 		flag_left = 0;
 		turn_angle = -turn_angle;
 	}
-	SetServoAngle(8,125);//爪子先松开//为了能够让购物车过弯
+	SetServoAngle(8,140);//爪子先松开//为了能够让购物车过弯
 	while (now_angle < turn_angle)
 	{
 		//根据dt，积分积出但前的角度，原理不用太明白。

@@ -90,7 +90,7 @@ int main(void)
 	// Arm_Grab();
 	SetServoAngle(5, 75);
 	ArmSolution(-120, 20);
-	SetServoAngle(6, 85); //位置回归
+	SetServoAngle(6, 29); //位置回归//SetServoAngle(6, 85);
 	void Arm_test(int t, int height, int flag);
 	car_flag=2;
 	
@@ -161,7 +161,7 @@ void get_runto_Grab()
 	{
 		if(Object_pos_index==0){//初次进入需要左转+直行一格子
 			TurnBY_PID(90);
-			Straight_go(200);
+			Straight_go(100);
 			MotorController_SetSpeed(1,0);
 			MotorController_SetSpeed(2,0);
 			Delay_ms(1000);
