@@ -146,7 +146,8 @@ void ArmDriver_Init()
 	//预分频值的计算方法：系统时钟频率/TIM6计数时钟频率 - 1
 	TIM_TimeBaseStructure.TIM_Prescaler = (uint16_t)(RCC_Clocks.SYSCLK_Frequency / 20000) - 1; //计数频率10KHz
 	//使TIM6溢出频率的计算方法：TIM6计数时钟频率/（ARR+1），这里的ARR就是TIM_Period的值，设成9，如果TIM6计数时钟频率为10K，则溢出周期为1ms
-	TIM_TimeBaseStructure.TIM_Period = (uint16_t)30 * 10 - 1; //也就是50ms一次
+	TIM_TimeBaseStructure.TIM_Period = (uint16_t)30 * 8 - 1; //也就是50ms一次
+	//TIM_TimeBaseStructure.TIM_Period = (uint16_t)30 * 10 - 1; //也就是50ms一次
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM7, &TIM_TimeBaseStructure);
@@ -326,14 +327,14 @@ void Arm_Grab()
 		if (Object_pos[Object_pos_index][1] >= 135)
 		{						   //如果是上面的
 			ArmSolution(-30, 210); //先举高一点
-			Delay_ms(2000);
+			Delay_ms(1500);
 			ArmSolution(-210, Object_pos[Object_pos_index][1]);
 		}
 		//如果是下面的
 		if (Object_pos[Object_pos_index][1] <= 0)
 		{
 			ArmSolution(-100, 50); //先举高一点
-			Delay_ms(2000);
+			Delay_ms(1000);
 			ArmSolution(-200, Object_pos[Object_pos_index][1]);//-171
 		}
 		
@@ -343,7 +344,7 @@ void Arm_Grab()
 
 		SetServoAngle(5, 120); //抓紧大爪子
 
-		Delay_ms(1000); //让我对比一下位置
+		Delay_ms(500); //让我对比一下位置
 		if (Object_pos[Object_pos_index][1] >= 135)
 		{						   //如果是上面的
 			ArmSolution(-70, 140); //回退一下，以免磕到
@@ -366,7 +367,7 @@ void Arm_Grab()
 		//SetServoAngle(6, 85);
 		SetServoAngle(6, 29);
 		ArmSolution(-120, 20); //位置回归
-		Delay_ms(1500);
+		Delay_ms(1000);
 
 		
 	}

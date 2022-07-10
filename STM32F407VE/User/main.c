@@ -161,10 +161,10 @@ void get_runto_Grab()
 	{
 		if(Object_pos_index==0){//初次进入需要左转+直行一格子
 			TurnBY_PID(90);
-			Straight_go(100);
+			Straight_go(150);
 			MotorController_SetSpeed(1,0);
 			MotorController_SetSpeed(2,0);
-			Delay_ms(1000);
+			Delay_ms(500);
 			//map_count--;//进入的时候会多记一个位置
 		}
 		Arm_Grab();
@@ -174,7 +174,7 @@ void get_runto_Grab()
 			// car_flag=Car_Waiting;//这里是测试，到时候删掉
 			MotorController_SetSpeed(1,0);
 			MotorController_SetSpeed(2,0);
-			Delay_ms(1000);
+			Delay_ms(500);
 			car_flag = Car_Driving; //车子状态制成行驶
 		}
 	}
