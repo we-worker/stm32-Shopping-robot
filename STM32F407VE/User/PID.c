@@ -282,7 +282,61 @@ void TurnBY_PID(int turn_angle)
 		MotorController_SetSpeed(2, out);
 		MotorController_SetSpeed(1, out);
 	}
-	SetServoAngle(8,150);//爪子再抓紧
+	SetServoAngle(8,140);//爪子再抓紧
+	//小挺顿一下
+	// MotorController_SetSpeed(1, 0);
+	// MotorController_SetSpeed(2, 0);
+	// Delay_ms(50);
+}
+//通过速度pid来实现转向，输入目标方向即可，实现转速先快后慢。不是强制转到线上
+void TurnBY_PID_notforce_write(int turn_angle)
+{
+	PID t_PID;
+	turn_PIDInit(&t_PID);
+
+	extern float Motor_speed1;
+	extern float Motor_speed2;
+
+	double now_angle = 0; //当前角度
+
+	int flag_left = 1;	//是否为左转标志
+	if (turn_angle < 0) //根据目标角度是向右还是向左修改，以便后续
+	{
+		flag_left = 0;
+		turn_angle = -turn_angle;
+	}
+	SetServoAngle(8,120);//爪子先松开//为了能够让购物车过弯
+	while (now_angle < turn_angle)
+	{
+		//根据dt，积分积出但前的角度，原理不用太明白。
+		Delay_10us(10);
+		float dspeed = fabs(Motor_speed1 + Motor_speed2);
+		now_angle = now_angle + (dspeed * 0.0001f) / (2 * 3.14159f * car_D) * 360;
+
+		//开始强制修正,旋转角度在预期的2/3以上时，如果检测到线在中心位置，直接推出旋转。
+		//标准的获取前方探头的数据
+		get_AMT1450Data_UART(&begin, &jump, count);
+
+		if (jump == 2)
+			line_position = 0.5f * (count[0] + count[1]); // line_position=两次跳变的中间位置，即是线的位置
+
+		if (line_position > 70 && line_position < 80 && now_angle > turn_angle / 3.0 * 2) //如果线在中心位置并且旋转角度在预期的2/3以上时，直接退出
+		{
+			break;
+		}
+
+
+		int out = (Turn_PID(&t_PID, now_angle, turn_angle) + dspeed / 2) / 2; //更加平滑使用转向pid得到数值
+		//根据是否为左转变化一下，同时需要固定30速度，不然后面转的太慢了
+		if (flag_left == 0)
+			out = -out - 50;
+		else
+			out = out + 50;
+		//电机附速度值
+		MotorController_SetSpeed(2, out);
+		MotorController_SetSpeed(1, out);
+	}
+	SetServoAngle(8,140);//爪子再抓紧
 	//小挺顿一下
 	// MotorController_SetSpeed(1, 0);
 	// MotorController_SetSpeed(2, 0);
@@ -476,7 +530,7 @@ void Map_Action()
 	extern uint8_t car_flag;
 	int map[][2] = {{2, 2},{10, 3},{1,4},{6,7},{6,8},{6,9},{6,10},{6,11},{6,12},{8,12},{6,15},{6,16},{6,17},{6,18},{6,19},{6,20},{8,20},
 	{6,23},{6,24},{6,25},{6,26},{6,27},{6,28},{8,28},{6,31},{6,32},{6,33},{6,34},{6,35},{6,36},{9,36}};
-
+	//int map[][2]={{9,2}};
 	if (map_count == map[map_index][1])
 	{
 		switch (map[map_index][0])
@@ -527,8 +581,9 @@ void Map_Action()
 			Straight_go_mm(200, 120);//走过车身的一半长
 			TurnBY_PID(90);
 			Straight_go_mm(200, 120);//走过车身的一半长
-			TurnBY_PID(-90);
+			TurnBY_PID_notforce_write(-90);
 			Straight_go_mm(0, 0);//停止
+			Delay_ms(1000);
 			car_flag=Car_Stop;
 			break;	
 		case 10://左转+延时1s+倒退1格
@@ -538,7 +593,7 @@ void Map_Action()
 
 			SetServoAngle(8,90);
 			Straight_back_mm(200,230);
-			SetServoAngle(8,160);
+			SetServoAngle(8,140);
 			Straight_back_mm(50,40);
 
 			Straight_go(220);

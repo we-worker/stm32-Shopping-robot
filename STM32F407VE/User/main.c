@@ -95,6 +95,7 @@ int main(void)
 	car_flag=2;
 	
 	car_flag=Car_Driving;
+	Delay_ms(1000*10);
 	while (1)
 	{
 		//TODO:10s启动
@@ -106,8 +107,8 @@ int main(void)
 		}
 		if(car_flag==Car_Driving){
 			int32_t fpid_out = Follow_PID(&s_PID, line_position);			 //循迹pid
-			MotorController_SetSpeed(2, fpid_out+250);				 //电机控制
-			MotorController_SetSpeed(1, fpid_out-250);
+			MotorController_SetSpeed(2, fpid_out+300);				 //电机控制
+			MotorController_SetSpeed(1, fpid_out-300);
 		}
 	
 		//Arm_test(t, height, flag);
