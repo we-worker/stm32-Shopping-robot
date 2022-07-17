@@ -10,8 +10,11 @@
 #include "ArmSolution.h"
 
 int crossing_flag; //用于十字路口检测的临时变量
-int map_count;	   //地图十字路口计数
+int map_count=1;	   //地图十字路口计数//1
 int map_index;	   //用于地图内部下一个操作的索引
+//
+//	int map_count=36;
+// int map_index=30;
 
 //小车默认方向和位置。
 int car_direction = 3;
@@ -576,6 +579,7 @@ void Map_Action()
 
 			break;	
 		case 9://放好购物车的倒退+放爪+向前一格
+			/*
 			TurnBY_PID(-90);
 			Straight_go(200);
 			Straight_go_mm(200, 120);//走过车身的一半长
@@ -585,6 +589,21 @@ void Map_Action()
 			Straight_go_mm(0, 0);//停止
 			Delay_ms(1000);
 			car_flag=Car_Stop;
+			*/
+				TurnBY_PID(-90);
+				Straight_go_mm(200, 120);//走过车身的一半长
+				MotorController_SetSpeed(1, -200);
+				MotorController_SetSpeed(2, 200);
+				Delay_ms(500);
+				TurnBY_PID_notforce_write(90);
+				MotorController_SetSpeed(1, -200);
+				MotorController_SetSpeed(2, 200);
+				Delay_ms(800);
+				TurnBY_PID_notforce_write(-90);
+				Straight_go_mm(0, 0);//停止
+				Delay_ms(1000);
+				car_flag=Car_Stop;
+		
 			break;	
 		case 10://左转+延时1s+倒退1格
 			Straight_go_mm(200, 120); //走过车身的一半长

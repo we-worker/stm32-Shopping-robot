@@ -308,7 +308,7 @@ void Arm_Grab()
 			target_pos[0]='D';//下
 		}
 //原本是200,300,40
-		if (Object_pos[Object_pos_index][0] < 235	){
+		if (Object_pos[Object_pos_index][0] < 240	){//235临时修改，看情况更改,后来改为250
 			target_pos[2]='R';//右
 			Object_pos[Object_pos_index][0] = 19;
 		}
@@ -335,7 +335,8 @@ void Arm_Grab()
 		{
 			ArmSolution(-100, 50); //先举高一点
 			Delay_ms(1000);
-			ArmSolution(-200, Object_pos[Object_pos_index][1]);//-171
+			//SetServoAngle(5, 105);//防止打到墙壁再小一点
+			ArmSolution(-220, Object_pos[Object_pos_index][1]);//-200
 		}
 		
 		

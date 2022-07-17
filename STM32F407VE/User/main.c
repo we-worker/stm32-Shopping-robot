@@ -17,7 +17,7 @@ void NVIC_Configuration(void); //中断配置
 void GPIO_Config(void);		   //通用输入输出端口配置
 void System_Clock(void);	   //系统clock韩式
 
-void get_runto_Grab();
+void get_runto_Grab(void);
 
 //全局变量
 uint16_t n10msCount;
@@ -84,18 +84,22 @@ int main(void)
 
 	printf("Init_Finish\n");
 
-	int t = 1;
-	int height = 100;
-	int flag = 1;
+	//int t = 1;
+	//int height = 100;
+	//int flag = 1;
 	// Arm_Grab();
 	SetServoAngle(5, 75);
 	ArmSolution(-120, 20);
 	SetServoAngle(6, 29); //位置回归//SetServoAngle(6, 85);
 	void Arm_test(int t, int height, int flag);
-	car_flag=2;
 	
 	car_flag=Car_Driving;
+	//car_flag=Car_Waiting;
 	Delay_ms(1000*10);
+
+	MotorController_SetSpeed(2, 200);				 //电机控制
+	MotorController_SetSpeed(1, -200);
+	Delay_ms(1000*1.5);
 	while (1)
 	{
 		//TODO:10s启动
@@ -113,7 +117,7 @@ int main(void)
 	
 		//Arm_test(t, height, flag);
 		get_runto_Grab();
-		
+		//Arm_Grab();
 
 		/*
 		if (car_flag == Car_Stop)
