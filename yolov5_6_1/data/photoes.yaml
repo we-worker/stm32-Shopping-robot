@@ -1,0 +1,9 @@
+
+train: ./data/images
+val: ./data/images
+
+# number of classes
+nc: 9
+
+# class names
+names: ["RedCube","BlueCube","MagicCube","SnowBeer","ADMilk","SnowBeer2","SnowBeer3","Dongpeng","SnowBeer4"]

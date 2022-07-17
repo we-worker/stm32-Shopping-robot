@@ -1,0 +1,1 @@
+python train.py --img 640 --batch 32 --epochs 600 --data /data/train_photoes/photoes.yaml --weights weights/yolov5s.pt  --cache --cfg models/yolov5s.yaml

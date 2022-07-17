@@ -1,0 +1,10 @@
+{
+    "python.pythonPath": "C:\\Users\\23502\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
+    "python.autoComplete.extraPaths": [
+        "C:\\Python39\\Lib\\site-packages\\openpyxl"
+    ],
+    "python.analysis.extraPaths": [
+        "C:\\Python39\\Lib\\site-packages\\openpyxl",
+        "C:\\works\\Miniconda3\\envs\\Gan\\Lib\\site-packages"
+    ]
+}
